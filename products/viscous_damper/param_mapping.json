@@ -1,0 +1,549 @@
+{
+  "total_fields": 107,
+  "categories": {
+    "cover_info": [
+      {
+        "placeholder": "{{FIELD_001}}",
+        "original": "北京吉利学院整体搬迁成都项目科学与艺术中心",
+        "location": "paragraph[13] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_002}}",
+        "original": "四川融海运通抗震科技有限责任公司",
+        "location": "paragraph[29] (产品供应商)"
+      },
+      {
+        "placeholder": "{{FIELD_003}}",
+        "original": "四川省成都市新津区普兴街道清云南路256 号",
+        "location": "paragraph[30] (生产地址)"
+      },
+      {
+        "placeholder": "{{FIELD_004}}",
+        "original": "18180838170",
+        "location": "paragraph[31] (电话)"
+      },
+      {
+        "placeholder": "{{FIELD_005}}",
+        "original": "2024 年 12 月",
+        "location": "paragraph[32] (报告日期)"
+      }
+    ],
+    "certificates": [
+      {
+        "placeholder": "{{FIELD_006}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[0].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_007}}",
+        "original": "2024 年 12 月",
+        "location": "table[0].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_008}}",
+        "original": "RB124014855",
+        "location": "table[0].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_009}}",
+        "original": "01",
+        "location": "table[0].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_010}}",
+        "original": "JG/T209-2012",
+        "location": "table[0].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_011}}",
+        "original": "质量部",
+        "location": "table[0].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_012}}",
+        "original": "合格",
+        "location": "table[0].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_013}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[1].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_014}}",
+        "original": "2024 年 12 月",
+        "location": "table[1].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_015}}",
+        "original": "RB124014856",
+        "location": "table[1].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_016}}",
+        "original": "01",
+        "location": "table[1].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_017}}",
+        "original": "JG/T209-2012",
+        "location": "table[1].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_018}}",
+        "original": "质量部",
+        "location": "table[1].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_019}}",
+        "original": "合格",
+        "location": "table[1].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_020}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[2].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_021}}",
+        "original": "2024 年 12 月",
+        "location": "table[2].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_022}}",
+        "original": "RB124014857",
+        "location": "table[2].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_023}}",
+        "original": "01",
+        "location": "table[2].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_024}}",
+        "original": "JG/T209-2012",
+        "location": "table[2].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_025}}",
+        "original": "质量部",
+        "location": "table[2].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_026}}",
+        "original": "合格",
+        "location": "table[2].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_027}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[3].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_028}}",
+        "original": "2024 年 12 月",
+        "location": "table[3].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_029}}",
+        "original": "RB124014858",
+        "location": "table[3].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_030}}",
+        "original": "01",
+        "location": "table[3].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_031}}",
+        "original": "JG/T209-2012",
+        "location": "table[3].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_032}}",
+        "original": "质量部",
+        "location": "table[3].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_033}}",
+        "original": "合格",
+        "location": "table[3].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_034}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[4].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_035}}",
+        "original": "2024 年 12 月",
+        "location": "table[4].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_036}}",
+        "original": "RB124014859",
+        "location": "table[4].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_037}}",
+        "original": "01",
+        "location": "table[4].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_038}}",
+        "original": "JG/T209-2012",
+        "location": "table[4].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_039}}",
+        "original": "质量部",
+        "location": "table[4].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_040}}",
+        "original": "合格",
+        "location": "table[4].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_041}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[5].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_042}}",
+        "original": "2024 年 12 月",
+        "location": "table[5].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_043}}",
+        "original": "RB124014860",
+        "location": "table[5].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_044}}",
+        "original": "01",
+        "location": "table[5].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_045}}",
+        "original": "JG/T209-2012",
+        "location": "table[5].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_046}}",
+        "original": "质量部",
+        "location": "table[5].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_047}}",
+        "original": "合格",
+        "location": "table[5].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_048}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[6].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_049}}",
+        "original": "2024 年 12 月",
+        "location": "table[6].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_050}}",
+        "original": "RB124014861",
+        "location": "table[6].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_051}}",
+        "original": "01",
+        "location": "table[6].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_052}}",
+        "original": "JG/T209-2012",
+        "location": "table[6].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_053}}",
+        "original": "质量部",
+        "location": "table[6].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_054}}",
+        "original": "合格",
+        "location": "table[6].cell[3,3] (检验结果)"
+      },
+      {
+        "placeholder": "{{FIELD_055}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[7].cell[0,3] (规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_056}}",
+        "original": "2024 年 12 月",
+        "location": "table[7].cell[1,1] (生产日期)"
+      },
+      {
+        "placeholder": "{{FIELD_057}}",
+        "original": "RB124014862",
+        "location": "table[7].cell[1,3] (出厂编号)"
+      },
+      {
+        "placeholder": "{{FIELD_058}}",
+        "original": "01",
+        "location": "table[7].cell[2,1] (检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_059}}",
+        "original": "JG/T209-2012",
+        "location": "table[7].cell[2,3] (检验依据)"
+      },
+      {
+        "placeholder": "{{FIELD_060}}",
+        "original": "质量部",
+        "location": "table[7].cell[3,1] (检验部门)"
+      },
+      {
+        "placeholder": "{{FIELD_061}}",
+        "original": "合格",
+        "location": "table[7].cell[3,3] (检验结果)"
+      }
+    ],
+    "visual": [
+      {
+        "placeholder": "{{FIELD_062}}",
+        "original": "四川融海运通抗震科技有限责任公司",
+        "location": "paragraph[136] (外观报告-公司名称)"
+      },
+      {
+        "placeholder": "{{FIELD_063}}",
+        "original": "何永琴",
+        "location": "paragraph[139] (外观报告-检验员)"
+      },
+      {
+        "placeholder": "{{FIELD_064}}",
+        "original": "童俊豪",
+        "location": "paragraph[139] (外观报告-审核)"
+      },
+      {
+        "placeholder": "{{FIELD_065}}",
+        "original": "2024 年 12 月",
+        "location": "paragraph[139] (外观报告-检测日期)"
+      },
+      {
+        "placeholder": "{{FIELD_066}}",
+        "original": "北京吉利学院整体搬迁成都项目科学与艺术中心",
+        "location": "table[8].cell[0,1] (外观-项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_067}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[8].cell[2,3] (外观-产品型号)"
+      },
+      {
+        "placeholder": "{{FIELD_068}}",
+        "original": "光滑平整",
+        "location": "table[8].cell[4,3] (表面平滑度-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_069}}",
+        "original": "8",
+        "location": "table[8].cell[4,4] (表面平滑度-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_070}}",
+        "original": "合格",
+        "location": "table[8].cell[4,5] (表面平滑度-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_071}}",
+        "original": "无",
+        "location": "table[8].cell[5,3] (机械损伤-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_072}}",
+        "original": "8",
+        "location": "table[8].cell[5,4] (机械损伤-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_073}}",
+        "original": "合格",
+        "location": "table[8].cell[5,5] (机械损伤-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_074}}",
+        "original": "无",
+        "location": "table[8].cell[6,3] (锈蚀毛刺-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_075}}",
+        "original": "8",
+        "location": "table[8].cell[6,4] (锈蚀毛刺-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_076}}",
+        "original": "合格",
+        "location": "table[8].cell[6,5] (锈蚀毛刺-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_077}}",
+        "original": "无",
+        "location": "table[8].cell[7,3] (无渗漏-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_078}}",
+        "original": "8",
+        "location": "table[8].cell[7,4] (无渗漏-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_079}}",
+        "original": "合格",
+        "location": "table[8].cell[7,5] (无渗漏-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_080}}",
+        "original": "标识清晰易辨认",
+        "location": "table[8].cell[8,3] (产品标识-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_081}}",
+        "original": "8",
+        "location": "table[8].cell[8,4] (产品标识-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_082}}",
+        "original": "合格",
+        "location": "table[8].cell[8,5] (产品标识-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_083}}",
+        "original": "-1.3  —  +2.5",
+        "location": "table[8].cell[9,3] (长度偏差-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_084}}",
+        "original": "8",
+        "location": "table[8].cell[9,4] (长度偏差-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_085}}",
+        "original": "合格",
+        "location": "table[8].cell[9,5] (长度偏差-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_086}}",
+        "original": "-1.4  —  +1.8",
+        "location": "table[8].cell[10,3] (截面尺寸偏差-实测值)"
+      },
+      {
+        "placeholder": "{{FIELD_087}}",
+        "original": "8",
+        "location": "table[8].cell[10,4] (截面尺寸偏差-数量)"
+      },
+      {
+        "placeholder": "{{FIELD_088}}",
+        "original": "合格",
+        "location": "table[8].cell[10,5] (截面尺寸偏差-结论)"
+      },
+      {
+        "placeholder": "{{FIELD_089}}",
+        "original": "VFD-NL×350×45",
+        "location": "table[8].cell[11,0] (外观-检验结论-型号)"
+      },
+      {
+        "placeholder": "{{FIELD_090}}",
+        "original": "该项目黏滞阻尼器",
+        "location": "table[8].cell[11,0] (外观-检验结论-项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_091}}",
+        "original": "检验结论：\n\n{{FIELD_090}} {{FIELD_089}} 所检项目符合<<JG/T209-2012>>中质量标准要求，产品均检验合格 。",
+        "location": "table[8].cell[11,1] (外观-检验结论)"
+      }
+    ],
+    "mechanical": [
+      {
+        "placeholder": "{{FIELD_092}}",
+        "original": "北京吉利学院整体搬迁成都项目科学与艺术中心",
+        "location": "table[9].cell[0,1] (力学-项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_093}}",
+        "original": "VFD-NL×332×53.4",
+        "location": "table[9].cell[1,1] (力学-规格型号)"
+      },
+      {
+        "placeholder": "{{FIELD_094}}",
+        "original": "332",
+        "location": "table[9].cell[4,0] (力学-最大阻尼力(kN))"
+      },
+      {
+        "placeholder": "{{FIELD_095}}",
+        "original": "53.4",
+        "location": "table[9].cell[4,1] (力学-设计位移(mm))"
+      },
+      {
+        "placeholder": "{{FIELD_096}}",
+        "original": "64.08",
+        "location": "table[9].cell[4,2] (力学-极限位移(mm))"
+      },
+      {
+        "placeholder": "{{FIELD_097}}",
+        "original": "60",
+        "location": "table[9].cell[4,3] (力学-阻尼系数)"
+      },
+      {
+        "placeholder": "{{FIELD_098}}",
+        "original": "0.3",
+        "location": "table[9].cell[4,4] (力学-阻尼力指数)"
+      },
+      {
+        "placeholder": "{{FIELD_099}}",
+        "original": "0.898",
+        "location": "table[9].cell[4,5] (力学-结构基频(Hz))"
+      },
+      {
+        "placeholder": "{{FIELD_100}}",
+        "original": "符合",
+        "location": "table[9].cell[7,3] (力学-设计阻尼力-检测结果)"
+      },
+      {
+        "placeholder": "{{FIELD_101}}",
+        "original": "{{FIELD_100}}",
+        "location": "table[9].cell[7,4] (力学-设计阻尼力-判定)"
+      },
+      {
+        "placeholder": "{{FIELD_102}}",
+        "original": "符合",
+        "location": "table[9].cell[8,3] (力学-极限位移-检测结果)"
+      },
+      {
+        "placeholder": "{{FIELD_103}}",
+        "original": "{{FIELD_102}}",
+        "location": "table[9].cell[8,4] (力学-极限位移-判定)"
+      },
+      {
+        "placeholder": "{{FIELD_104}}",
+        "original": "符合",
+        "location": "table[9].cell[9,3] (力学-阻尼系数-检测结果)"
+      },
+      {
+        "placeholder": "{{FIELD_105}}",
+        "original": "{{FIELD_104}}",
+        "location": "table[9].cell[9,4] (力学-阻尼系数-判定)"
+      },
+      {
+        "placeholder": "{{FIELD_106}}",
+        "original": "符合",
+        "location": "table[9].cell[10,3] (力学-阻尼指数-检测结果)"
+      },
+      {
+        "placeholder": "{{FIELD_107}}",
+        "original": "{{FIELD_106}}",
+        "location": "table[9].cell[10,4] (力学-阻尼指数-判定)"
+      }
+    ],
+    "other": []
+  }
+}

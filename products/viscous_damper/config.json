@@ -1,0 +1,54 @@
+{
+  "product_name": "黏滞阻尼器",
+  "description": "黏滞阻尼器出厂检验报告",
+  "template": "template_prepared.docx",
+  "excel_template": "excel_template.xlsx",
+  "mapping": "param_mapping.json",
+  "sheets": ["项目基本信息", "产品型号清单", "外观尺寸检测数据", "力学性能检测数据"],
+  "max_models_in_template": 8,
+  "max_mech_models_per_page": 1,
+  "sections": [
+    {"file": "01_cover.docx",           "repeat": 1},
+    {"file": "02_toc.docx",             "repeat": 1, "page_break_before": true},
+    {"file": "03_company_intro.docx",   "repeat": 1, "page_break_before": true},
+    {"file": "04_business_license.docx","repeat": 1, "page_break_before": true},
+    {"file": "05_cert.docx",            "repeat": "model_count", "per_model": true, "page_break_before": true},
+    {"file": "06_quality_commitment.docx","repeat": 1, "page_break_before": true},
+    {"file": "07_visual.docx",          "repeat": "model_count", "per_model": true, "page_break_before": true, "page_break_after": true},
+    {"file": "08_mechanical.docx",      "repeat": "model_count", "per_model": true, "page_break_before": true, "page_break_after": true}
+  ],
+  "has_mechanical_detail": true,
+  "has_per_model_visual": true,
+  "anchor_text": {
+    "certificate": "产品合格证",
+    "quality_commitment": "产品质量承诺",
+    "appearance_report": "建筑消能阻尼器外观质量及尺寸检测报告",
+    "mechanical_report": "成品力学性能检测报告"
+  },
+  "ui_config": {
+    "product_table": {
+      "headers": ["产品型号", "阻尼器编号范围", "数量", "生产日期", "检验标准"],
+      "data_keys": ["产品型号", "阻尼器编号范围", "数量", "生产日期", "检验标准"]
+    },
+    "mechanical_tab": {
+      "label": "力学性能检测",
+      "headers": ["产品型号", "最大阻尼力\n(kN)", "设计位移\n(mm)", "极限位移\n(mm)",
+                  "阻尼系数\n(kN(s/mm)α)", "阻尼力指数\n(α)", "结构基频\n(Hz)",
+                  "设计阻尼力", "极限位移", "阻尼系数", "阻尼指数"],
+      "data_keys": ["产品型号", "最大阻尼力(kN)", "设计位移(mm)", "极限位移(mm)",
+                    "阻尼系数(kN(s/mm)α)", "阻尼力指数(α)", "结构基频(Hz)",
+                    "设计阻尼力(合格/不合格)", "极限位移(合格/不合格)",
+                    "阻尼系数(合格/不合格)", "阻尼指数(合格/不合格)"]
+    },
+    "visual_tab": {
+      "label": "外观尺寸检测",
+      "headers": ["产品型号", "表面平滑度", "机械损伤", "锈蚀毛刺", "无渗漏",
+                  "产品标识", "长度偏差", "截面尺寸偏差"],
+      "data_keys": ["产品型号",
+                    "表面平滑度(合格/不合格)", "机械损伤(合格/不合格)",
+                    "锈蚀毛刺(合格/不合格)", "无渗漏(合格/不合格)",
+                    "产品标识(合格/不合格)", "长度偏差(合格/不合格)",
+                    "截面尺寸偏差(合格/不合格)"]
+    }
+  }
+}

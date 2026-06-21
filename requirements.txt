@@ -1,0 +1,8 @@
+PySide6
+python-docx
+docxcompose
+openpyxl
+pywin32
+Pillow
+PyMuPDF
+pdf2image

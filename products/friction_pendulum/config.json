@@ -1,0 +1,45 @@
+{
+  "product_name": "摩擦摆支座",
+  "description": "建筑摩擦摆隔震支座出厂检验报告",
+  "template": "template_prepared.docx",
+  "excel_template": "excel_template.xlsx",
+  "mapping": "param_mapping.json",
+  "sheets": ["项目基本信息", "产品型号清单", "力学性能检测数据", "外观尺寸检测数据"],
+  "archive_base": "output",
+  "max_models_in_template": 6,
+  "has_mechanical_detail": true,
+  "has_per_model_visual": true,
+  "max_mech_models_per_page": 16,
+  "sections": [
+    {"file": "01_cover.docx", "repeat": 1},
+    {"file": "02_toc.docx", "repeat": 1, "page_break_before": true},
+    {"file": "03_business_license.docx", "repeat": 1, "page_break_before": true, "page_break_after": true},
+    {"file": "04_cert.docx", "repeat": "model_count", "per_model": true, "page_break_before": true},
+    {"file": "05_mech_summary.docx", "repeat": 1, "page_break_before": true, "page_break_after": true},
+    {"file": "06_mech_detail.docx", "repeat": 1, "page_break_before": true, "page_break_after": true},
+    {"file": "07_visual.docx", "repeat": "model_count", "per_model": true, "page_break_before": true, "page_break_after": true},
+    {"file": "08_quality_commitment.docx", "repeat": 1, "page_break_before": false}
+  ],
+  "anchor_text": {
+    "certificate": "产品合格证",
+    "quality_commitment": "产品质量承诺书",
+    "appearance_report": "支座外观质量及尺寸检测报告",
+    "mechanical_report": "支座力学性能检验报告"
+  },
+  "ui_config": {
+    "product_table": {
+      "headers": ["产品型号", "支座编号范围", "数量", "生产日期", "检验标准"],
+      "data_keys": ["产品型号", "支座编号范围", "数量", "生产日期", "检验标准"]
+    },
+    "mechanical_tab": {
+      "label": "力学性能检测",
+      "headers": ["产品型号", "竖向承载力\n(KN)", "水平极限位移\n(mm)", "摆动周期\n(s)", "摩擦系数\n(慢)", "摩擦系数\n(快)", "支座高度\n(mm)", "数量"],
+      "data_keys": ["产品型号", "竖向承载力(KN)", "水平极限位移(mm)", "摆动周期(s)", "摩擦系数(慢)", "摩擦系数(快)", "支座高度(mm)", "数量"]
+    },
+    "visual_tab": {
+      "label": "外观尺寸检测",
+      "headers": ["产品型号", "外观质量", "支座高度", "上下板平行度", "不锈钢表面质量", "摩擦材料表面质量"],
+      "data_keys": ["产品型号", "外观质量", "支座高度", "上下板平行度", "不锈钢表面质量", "摩擦材料表面质量"]
+    }
+  }
+}

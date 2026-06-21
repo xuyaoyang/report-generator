@@ -1,0 +1,77 @@
+{
+  "product_name": "阻尼器预埋件",
+  "description": "黏滞阻尼器预埋件出厂资料",
+  "template": "template_prepared.docx",
+  "excel_template": "excel_template.xlsx",
+  "mapping": "param_mapping.json",
+  "sheets": [
+    "项目基本信息",
+    "产品型号清单",
+    "外观尺寸检测数据"
+  ],
+  "archive_base": "output",
+  "max_models_in_template": 4,
+  "has_mechanical_detail": false,
+  "has_per_model_visual": true,
+  "extra_project_fields": [
+    "预埋件类型"
+  ],
+  "sections": [
+    {
+      "file": "01_cover.docx",
+      "repeat": 1
+    },
+    {
+      "file": "02_toc.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "03_cert.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "04_visual.docx",
+      "repeat": "model_count",
+      "per_model": true,
+      "page_break_before": true,
+      "page_break_after": true
+    }
+  ],
+  "anchor_text": {
+    "certificate": "预埋件合格证",
+    "appearance_report": "预埋件外观质量及尺寸检测报告"
+  },
+  "ui_config": {
+    "product_table": {
+      "headers": [
+        "产品名称",
+        "产品型号",
+        "数量",
+        "生产日期"
+      ],
+      "data_keys": [
+        "产品名称",
+        "产品型号",
+        "数量",
+        "生产日期"
+      ]
+    },
+    "visual_tab": {
+      "label": "外观尺寸检测",
+      "headers": [
+        "产品型号",
+        "长度实测值",
+        "宽度实测值",
+        "厚度实测值"
+      ],
+      "data_keys": [
+        "产品型号",
+        "长度实测值",
+        "宽度实测值",
+        "厚度实测值"
+      ]
+    }
+  }
+}

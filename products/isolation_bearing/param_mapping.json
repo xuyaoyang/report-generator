@@ -1,0 +1,1024 @@
+{
+  "total_fields": 202,
+  "categories": {
+    "cover_info": [
+      {
+        "placeholder": "{{FIELD_001}}",
+        "original": "北京吉利学院整体搬迁成都项目科学与艺术中心-1号楼项目",
+        "location": "paragraph[10] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_002}}",
+        "original": "四川融海运通抗震科技有限责任公司",
+        "location": "paragraph[14] (产品供应商)"
+      },
+      {
+        "placeholder": "{{FIELD_003}}",
+        "original": "四川省成都市新津区普兴街道清云南路256 号",
+        "location": "paragraph[15]"
+      },
+      {
+        "placeholder": "{{FIELD_004}}",
+        "original": "2024 年 12 月",
+        "location": "paragraph[17] (制造日期)"
+      }
+    ],
+    "certificates": [
+      {
+        "placeholder": "{{FIELD_005}}",
+        "original": "LNR600-Ⅱ",
+        "location": "table[0].cell[1,1]"
+      },
+      {
+        "placeholder": "{{FIELD_006}}",
+        "original": "RA124017957-RA124017971",
+        "location": "table[0].cell[2,1]"
+      },
+      {
+        "placeholder": "{{FIELD_007}}",
+        "original": "2024年11月",
+        "location": "table[0].cell[3,1] (制造日期)"
+      },
+      {
+        "placeholder": "{{FIELD_008}}",
+        "original": "15件",
+        "location": "table[0].cell[4,1]"
+      },
+      {
+        "placeholder": "{{FIELD_009}}",
+        "original": "《GB 20688.3-2006》   《JG/T 118-2018》",
+        "location": "table[0].cell[5,1]"
+      },
+      {
+        "placeholder": "{{FIELD_010}}",
+        "original": "LNR700-Ⅱ",
+        "location": "table[1].cell[1,1]"
+      },
+      {
+        "placeholder": "{{FIELD_011}}",
+        "original": "RA124017972-RA124018033",
+        "location": "table[1].cell[2,1]"
+      },
+      {
+        "placeholder": "{{FIELD_012}}",
+        "original": "2024年11月",
+        "location": "table[1].cell[3,1] (制造日期)"
+      },
+      {
+        "placeholder": "{{FIELD_013}}",
+        "original": "62件",
+        "location": "table[1].cell[4,1]"
+      },
+      {
+        "placeholder": "{{FIELD_014}}",
+        "original": "《GB 20688.3-2006》   《JG/T 118-2018》",
+        "location": "table[1].cell[5,1]"
+      },
+      {
+        "placeholder": "{{FIELD_015}}",
+        "original": "LNR700-Ⅱ-R",
+        "location": "table[2].cell[1,1]"
+      },
+      {
+        "placeholder": "{{FIELD_016}}",
+        "original": "RA124018034-RA124018035",
+        "location": "table[2].cell[2,1]"
+      },
+      {
+        "placeholder": "{{FIELD_017}}",
+        "original": "2024年11月",
+        "location": "table[2].cell[3,1] (制造日期)"
+      },
+      {
+        "placeholder": "{{FIELD_018}}",
+        "original": "2件",
+        "location": "table[2].cell[4,1]"
+      },
+      {
+        "placeholder": "{{FIELD_019}}",
+        "original": "《GB 20688.3-2006》   《JG/T 118-2018》",
+        "location": "table[2].cell[5,1]"
+      },
+      {
+        "placeholder": "{{FIELD_020}}",
+        "original": "LRB700-Ⅱ",
+        "location": "table[3].cell[1,1]"
+      },
+      {
+        "placeholder": "{{FIELD_021}}",
+        "original": "RA124018036-RA124018093",
+        "location": "table[3].cell[2,1]"
+      },
+      {
+        "placeholder": "{{FIELD_022}}",
+        "original": "2024年11月",
+        "location": "table[3].cell[3,1] (制造日期)"
+      },
+      {
+        "placeholder": "{{FIELD_023}}",
+        "original": "58件",
+        "location": "table[3].cell[4,1]"
+      },
+      {
+        "placeholder": "{{FIELD_024}}",
+        "original": "《GB 20688.3-2006》   《JG/T 118-2018》",
+        "location": "table[3].cell[5,1]"
+      },
+      {
+        "placeholder": "{{FIELD_025}}",
+        "original": "LRB700-Ⅱ-R",
+        "location": "table[4].cell[1,1]"
+      },
+      {
+        "placeholder": "{{FIELD_026}}",
+        "original": "RA124018094-RA124018100",
+        "location": "table[4].cell[2,1]"
+      },
+      {
+        "placeholder": "{{FIELD_027}}",
+        "original": "2024年11月",
+        "location": "table[4].cell[3,1] (制造日期)"
+      },
+      {
+        "placeholder": "{{FIELD_028}}",
+        "original": "7件",
+        "location": "table[4].cell[4,1]"
+      },
+      {
+        "placeholder": "{{FIELD_029}}",
+        "original": "《GB 20688.3-2006》   《JG/T 118-2018》",
+        "location": "table[4].cell[5,1]"
+      },
+      {
+        "placeholder": "{{FIELD_030}}",
+        "original": "LNR835-Ⅱ",
+        "location": "table[5].cell[1,1]"
+      },
+      {
+        "placeholder": "{{FIELD_031}}",
+        "original": "RA124018101-RA124018103",
+        "location": "table[5].cell[2,1]"
+      },
+      {
+        "placeholder": "{{FIELD_032}}",
+        "original": "2024年11月",
+        "location": "table[5].cell[3,1] (制造日期)"
+      },
+      {
+        "placeholder": "{{FIELD_033}}",
+        "original": "3件",
+        "location": "table[5].cell[4,1]"
+      },
+      {
+        "placeholder": "{{FIELD_034}}",
+        "original": "《GB 20688.3-2006》   《JG/T 118-2018》",
+        "location": "table[5].cell[5,1]"
+      }
+    ],
+    "visual": [
+      {
+        "placeholder": "{{FIELD_167}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[9].cell[0,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_168}}",
+        "original": "{{FIELD_167}}",
+        "location": "table[9].cell[0,3]"
+      },
+      {
+        "placeholder": "{{FIELD_169}}",
+        "original": "{{FIELD_168}}",
+        "location": "table[9].cell[0,4]"
+      },
+      {
+        "placeholder": "{{FIELD_170}}",
+        "original": "15件",
+        "location": "table[9].cell[1,2]"
+      },
+      {
+        "placeholder": "{{FIELD_171}}",
+        "original": "{{FIELD_170}}",
+        "location": "table[9].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_172}}",
+        "original": "{{FIELD_171}}",
+        "location": "table[9].cell[1,4]"
+      },
+      {
+        "placeholder": "{{FIELD_173}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[10].cell[0,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_174}}",
+        "original": "{{FIELD_173}}",
+        "location": "table[10].cell[0,3]"
+      },
+      {
+        "placeholder": "{{FIELD_175}}",
+        "original": "{{FIELD_174}}",
+        "location": "table[10].cell[0,4]"
+      },
+      {
+        "placeholder": "{{FIELD_176}}",
+        "original": "62件",
+        "location": "table[10].cell[1,2]"
+      },
+      {
+        "placeholder": "{{FIELD_177}}",
+        "original": "{{FIELD_176}}",
+        "location": "table[10].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_178}}",
+        "original": "{{FIELD_177}}",
+        "location": "table[10].cell[1,4]"
+      },
+      {
+        "placeholder": "{{FIELD_179}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[11].cell[0,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_180}}",
+        "original": "{{FIELD_179}}",
+        "location": "table[11].cell[0,3]"
+      },
+      {
+        "placeholder": "{{FIELD_181}}",
+        "original": "{{FIELD_180}}",
+        "location": "table[11].cell[0,4]"
+      },
+      {
+        "placeholder": "{{FIELD_182}}",
+        "original": "2件",
+        "location": "table[11].cell[1,2]"
+      },
+      {
+        "placeholder": "{{FIELD_183}}",
+        "original": "{{FIELD_182}}",
+        "location": "table[11].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_184}}",
+        "original": "{{FIELD_183}}",
+        "location": "table[11].cell[1,4]"
+      },
+      {
+        "placeholder": "{{FIELD_185}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[12].cell[0,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_186}}",
+        "original": "{{FIELD_185}}",
+        "location": "table[12].cell[0,3]"
+      },
+      {
+        "placeholder": "{{FIELD_187}}",
+        "original": "{{FIELD_186}}",
+        "location": "table[12].cell[0,4]"
+      },
+      {
+        "placeholder": "{{FIELD_188}}",
+        "original": "58件",
+        "location": "table[12].cell[1,2]"
+      },
+      {
+        "placeholder": "{{FIELD_189}}",
+        "original": "{{FIELD_188}}",
+        "location": "table[12].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_190}}",
+        "original": "{{FIELD_189}}",
+        "location": "table[12].cell[1,4]"
+      },
+      {
+        "placeholder": "{{FIELD_191}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[13].cell[0,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_192}}",
+        "original": "{{FIELD_191}}",
+        "location": "table[13].cell[0,3]"
+      },
+      {
+        "placeholder": "{{FIELD_193}}",
+        "original": "{{FIELD_192}}",
+        "location": "table[13].cell[0,4]"
+      },
+      {
+        "placeholder": "{{FIELD_194}}",
+        "original": "7件",
+        "location": "table[13].cell[1,2]"
+      },
+      {
+        "placeholder": "{{FIELD_195}}",
+        "original": "{{FIELD_194}}",
+        "location": "table[13].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_196}}",
+        "original": "{{FIELD_195}}",
+        "location": "table[13].cell[1,4]"
+      },
+      {
+        "placeholder": "{{FIELD_197}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[14].cell[0,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_198}}",
+        "original": "{{FIELD_197}}",
+        "location": "table[14].cell[0,3]"
+      },
+      {
+        "placeholder": "{{FIELD_199}}",
+        "original": "{{FIELD_198}}",
+        "location": "table[14].cell[0,4]"
+      },
+      {
+        "placeholder": "{{FIELD_200}}",
+        "original": "3件",
+        "location": "table[14].cell[1,2]"
+      },
+      {
+        "placeholder": "{{FIELD_201}}",
+        "original": "{{FIELD_200}}",
+        "location": "table[14].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_202}}",
+        "original": "{{FIELD_201}}",
+        "location": "table[14].cell[1,4]"
+      }
+    ],
+    "mechanical": [
+      {
+        "placeholder": "{{FIELD_035}}",
+        "original": "乌鲁木齐市中科技工学校西山校区一期建设项目",
+        "location": "table[6].cell[1,2] (项目名称)"
+      },
+      {
+        "placeholder": "{{FIELD_036}}",
+        "original": "{{FIELD_035}}",
+        "location": "table[6].cell[1,3]"
+      },
+      {
+        "placeholder": "{{FIELD_037}}",
+        "original": "{{FIELD_036}}",
+        "location": "table[6].cell[1,4]"
+      },
+      {
+        "placeholder": "{{FIELD_038}}",
+        "original": "{{FIELD_037}}",
+        "location": "table[6].cell[1,5]"
+      },
+      {
+        "placeholder": "{{FIELD_039}}",
+        "original": "{{FIELD_038}}",
+        "location": "table[6].cell[1,6]"
+      },
+      {
+        "placeholder": "{{FIELD_040}}",
+        "original": "{{FIELD_039}}",
+        "location": "table[6].cell[1,7]"
+      },
+      {
+        "placeholder": "{{FIELD_041}}",
+        "original": "{{FIELD_040}}",
+        "location": "table[6].cell[1,8]"
+      },
+      {
+        "placeholder": "{{FIELD_042}}",
+        "original": "{{FIELD_041}}",
+        "location": "table[6].cell[1,9]"
+      },
+      {
+        "placeholder": "{{FIELD_043}}",
+        "original": "{{FIELD_042}}",
+        "location": "table[6].cell[1,10]"
+      },
+      {
+        "placeholder": "{{FIELD_044}}",
+        "original": "{{FIELD_043}}",
+        "location": "table[6].cell[1,11]"
+      },
+      {
+        "placeholder": "{{FIELD_045}}",
+        "original": "{{FIELD_044}}",
+        "location": "table[6].cell[1,12]"
+      },
+      {
+        "placeholder": "{{FIELD_046}}",
+        "original": "四川融海运通抗震科技有限责任公司",
+        "location": "table[6].cell[3,2] (产品供应商)"
+      },
+      {
+        "placeholder": "{{FIELD_047}}",
+        "original": "{{FIELD_046}}",
+        "location": "table[6].cell[3,3]"
+      },
+      {
+        "placeholder": "{{FIELD_048}}",
+        "original": "{{FIELD_047}}",
+        "location": "table[6].cell[3,4]"
+      },
+      {
+        "placeholder": "{{FIELD_049}}",
+        "original": "{{FIELD_048}}",
+        "location": "table[6].cell[3,5]"
+      },
+      {
+        "placeholder": "{{FIELD_050}}",
+        "original": "{{FIELD_049}}",
+        "location": "table[6].cell[3,6]"
+      },
+      {
+        "placeholder": "{{FIELD_051}}",
+        "original": "{{FIELD_050}}",
+        "location": "table[6].cell[3,7]"
+      },
+      {
+        "placeholder": "{{FIELD_052}}",
+        "original": "{{FIELD_051}}",
+        "location": "table[6].cell[3,8]"
+      },
+      {
+        "placeholder": "{{FIELD_053}}",
+        "original": "{{FIELD_052}}",
+        "location": "table[6].cell[3,9]"
+      },
+      {
+        "placeholder": "{{FIELD_054}}",
+        "original": "{{FIELD_053}}",
+        "location": "table[6].cell[3,10]"
+      },
+      {
+        "placeholder": "{{FIELD_055}}",
+        "original": "{{FIELD_054}}",
+        "location": "table[6].cell[3,11]"
+      },
+      {
+        "placeholder": "{{FIELD_056}}",
+        "original": "{{FIELD_055}}",
+        "location": "table[6].cell[3,12]"
+      },
+      {
+        "placeholder": "{{FIELD_057}}",
+        "original": "147套",
+        "location": "table[6].cell[4,10]"
+      },
+      {
+        "placeholder": "{{FIELD_058}}",
+        "original": "{{FIELD_057}}",
+        "location": "table[6].cell[4,11]"
+      },
+      {
+        "placeholder": "{{FIELD_059}}",
+        "original": "{{FIELD_058}}",
+        "location": "table[6].cell[4,12]"
+      },
+      {
+        "placeholder": "{{FIELD_060}}",
+        "original": "LNR600-Ⅱ",
+        "location": "table[6].cell[6,1]"
+      },
+      {
+        "placeholder": "{{FIELD_061}}",
+        "original": "620",
+        "location": "table[6].cell[6,2]"
+      },
+      {
+        "placeholder": "{{FIELD_062}}",
+        "original": "208",
+        "location": "table[6].cell[6,3]"
+      },
+      {
+        "placeholder": "{{FIELD_063}}",
+        "original": "111",
+        "location": "table[6].cell[6,4]"
+      },
+      {
+        "placeholder": "{{FIELD_064}}",
+        "original": "12",
+        "location": "table[6].cell[6,5]"
+      },
+      {
+        "placeholder": "{{FIELD_065}}",
+        "original": "1800",
+        "location": "table[6].cell[6,6]"
+      },
+      {
+        "placeholder": "{{FIELD_066}}",
+        "original": "0.84",
+        "location": "table[6].cell[6,7]"
+      },
+      {
+        "placeholder": "{{FIELD_067}}",
+        "original": "{{FIELD_066}}",
+        "location": "table[6].cell[6,8]"
+      },
+      {
+        "placeholder": "{{FIELD_068}}",
+        "original": "{{FIELD_067}}",
+        "location": "table[6].cell[6,9]"
+      },
+      {
+        "placeholder": "{{FIELD_069}}",
+        "original": "/",
+        "location": "table[6].cell[6,10]"
+      },
+      {
+        "placeholder": "{{FIELD_070}}",
+        "original": "/",
+        "location": "table[6].cell[6,11]"
+      },
+      {
+        "placeholder": "{{FIELD_071}}",
+        "original": "/",
+        "location": "table[6].cell[6,12]"
+      },
+      {
+        "placeholder": "{{FIELD_072}}",
+        "original": "LNR700-Ⅱ",
+        "location": "table[6].cell[7,1]"
+      },
+      {
+        "placeholder": "{{FIELD_073}}",
+        "original": "720",
+        "location": "table[6].cell[7,2]"
+      },
+      {
+        "placeholder": "{{FIELD_074}}",
+        "original": "246",
+        "location": "table[6].cell[7,3]"
+      },
+      {
+        "placeholder": "{{FIELD_075}}",
+        "original": "129",
+        "location": "table[6].cell[7,4]"
+      },
+      {
+        "placeholder": "{{FIELD_076}}",
+        "original": "12",
+        "location": "table[6].cell[7,5]"
+      },
+      {
+        "placeholder": "{{FIELD_077}}",
+        "original": "2100",
+        "location": "table[6].cell[7,6]"
+      },
+      {
+        "placeholder": "{{FIELD_078}}",
+        "original": "0.99",
+        "location": "table[6].cell[7,7]"
+      },
+      {
+        "placeholder": "{{FIELD_079}}",
+        "original": "{{FIELD_078}}",
+        "location": "table[6].cell[7,8]"
+      },
+      {
+        "placeholder": "{{FIELD_080}}",
+        "original": "{{FIELD_079}}",
+        "location": "table[6].cell[7,9]"
+      },
+      {
+        "placeholder": "{{FIELD_081}}",
+        "original": "/",
+        "location": "table[6].cell[7,10]"
+      },
+      {
+        "placeholder": "{{FIELD_082}}",
+        "original": "/",
+        "location": "table[6].cell[7,11]"
+      },
+      {
+        "placeholder": "{{FIELD_083}}",
+        "original": "/",
+        "location": "table[6].cell[7,12]"
+      },
+      {
+        "placeholder": "{{FIELD_084}}",
+        "original": "LNR700-Ⅱ-R",
+        "location": "table[6].cell[8,1]"
+      },
+      {
+        "placeholder": "{{FIELD_085}}",
+        "original": "720",
+        "location": "table[6].cell[8,2]"
+      },
+      {
+        "placeholder": "{{FIELD_086}}",
+        "original": "246",
+        "location": "table[6].cell[8,3]"
+      },
+      {
+        "placeholder": "{{FIELD_087}}",
+        "original": "129",
+        "location": "table[6].cell[8,4]"
+      },
+      {
+        "placeholder": "{{FIELD_088}}",
+        "original": "12",
+        "location": "table[6].cell[8,5]"
+      },
+      {
+        "placeholder": "{{FIELD_089}}",
+        "original": "2100",
+        "location": "table[6].cell[8,6]"
+      },
+      {
+        "placeholder": "{{FIELD_090}}",
+        "original": "1.14",
+        "location": "table[6].cell[8,7]"
+      },
+      {
+        "placeholder": "{{FIELD_091}}",
+        "original": "{{FIELD_090}}",
+        "location": "table[6].cell[8,8]"
+      },
+      {
+        "placeholder": "{{FIELD_092}}",
+        "original": "{{FIELD_091}}",
+        "location": "table[6].cell[8,9]"
+      },
+      {
+        "placeholder": "{{FIELD_093}}",
+        "original": "/",
+        "location": "table[6].cell[8,10]"
+      },
+      {
+        "placeholder": "{{FIELD_094}}",
+        "original": "/",
+        "location": "table[6].cell[8,11]"
+      },
+      {
+        "placeholder": "{{FIELD_095}}",
+        "original": "/",
+        "location": "table[6].cell[8,12]"
+      },
+      {
+        "placeholder": "{{FIELD_096}}",
+        "original": "LRB700-Ⅱ",
+        "location": "table[6].cell[9,1]"
+      },
+      {
+        "placeholder": "{{FIELD_097}}",
+        "original": "720",
+        "location": "table[6].cell[9,2]"
+      },
+      {
+        "placeholder": "{{FIELD_098}}",
+        "original": "246",
+        "location": "table[6].cell[9,3]"
+      },
+      {
+        "placeholder": "{{FIELD_099}}",
+        "original": "129",
+        "location": "table[6].cell[9,4]"
+      },
+      {
+        "placeholder": "{{FIELD_100}}",
+        "original": "12",
+        "location": "table[6].cell[9,5]"
+      },
+      {
+        "placeholder": "{{FIELD_101}}",
+        "original": "2500",
+        "location": "table[6].cell[9,6]"
+      },
+      {
+        "placeholder": "{{FIELD_102}}",
+        "original": "1.66",
+        "location": "table[6].cell[9,7]"
+      },
+      {
+        "placeholder": "{{FIELD_103}}",
+        "original": "{{FIELD_102}}",
+        "location": "table[6].cell[9,8]"
+      },
+      {
+        "placeholder": "{{FIELD_104}}",
+        "original": "{{FIELD_103}}",
+        "location": "table[6].cell[9,9]"
+      },
+      {
+        "placeholder": "{{FIELD_105}}",
+        "original": "0.96",
+        "location": "table[6].cell[9,10]"
+      },
+      {
+        "placeholder": "{{FIELD_106}}",
+        "original": "90",
+        "location": "table[6].cell[9,11]"
+      },
+      {
+        "placeholder": "{{FIELD_107}}",
+        "original": "/",
+        "location": "table[6].cell[9,12]"
+      },
+      {
+        "placeholder": "{{FIELD_108}}",
+        "original": "LRB700-Ⅱ-R",
+        "location": "table[6].cell[10,1]"
+      },
+      {
+        "placeholder": "{{FIELD_109}}",
+        "original": "720",
+        "location": "table[6].cell[10,2]"
+      },
+      {
+        "placeholder": "{{FIELD_110}}",
+        "original": "246",
+        "location": "table[6].cell[10,3]"
+      },
+      {
+        "placeholder": "{{FIELD_111}}",
+        "original": "129",
+        "location": "table[6].cell[10,4]"
+      },
+      {
+        "placeholder": "{{FIELD_112}}",
+        "original": "12",
+        "location": "table[6].cell[10,5]"
+      },
+      {
+        "placeholder": "{{FIELD_113}}",
+        "original": "2500",
+        "location": "table[6].cell[10,6]"
+      },
+      {
+        "placeholder": "{{FIELD_114}}",
+        "original": "1.81",
+        "location": "table[6].cell[10,7]"
+      },
+      {
+        "placeholder": "{{FIELD_115}}",
+        "original": "{{FIELD_114}}",
+        "location": "table[6].cell[10,8]"
+      },
+      {
+        "placeholder": "{{FIELD_116}}",
+        "original": "{{FIELD_115}}",
+        "location": "table[6].cell[10,9]"
+      },
+      {
+        "placeholder": "{{FIELD_117}}",
+        "original": "1.11",
+        "location": "table[6].cell[10,10]"
+      },
+      {
+        "placeholder": "{{FIELD_118}}",
+        "original": "90",
+        "location": "table[6].cell[10,11]"
+      },
+      {
+        "placeholder": "{{FIELD_119}}",
+        "original": "/",
+        "location": "table[6].cell[10,12]"
+      },
+      {
+        "placeholder": "{{FIELD_120}}",
+        "original": "LNR835-Ⅱ",
+        "location": "table[6].cell[11,1]"
+      },
+      {
+        "placeholder": "{{FIELD_121}}",
+        "original": "855",
+        "location": "table[6].cell[11,2]"
+      },
+      {
+        "placeholder": "{{FIELD_122}}",
+        "original": "291",
+        "location": "table[6].cell[11,3]"
+      },
+      {
+        "placeholder": "{{FIELD_123}}",
+        "original": "153",
+        "location": "table[6].cell[11,4]"
+      },
+      {
+        "placeholder": "{{FIELD_124}}",
+        "original": "12",
+        "location": "table[6].cell[11,5]"
+      },
+      {
+        "placeholder": "{{FIELD_125}}",
+        "original": "2500",
+        "location": "table[6].cell[11,6]"
+      },
+      {
+        "placeholder": "{{FIELD_126}}",
+        "original": "1.34",
+        "location": "table[6].cell[11,7]"
+      },
+      {
+        "placeholder": "{{FIELD_127}}",
+        "original": "{{FIELD_126}}",
+        "location": "table[6].cell[11,8]"
+      },
+      {
+        "placeholder": "{{FIELD_128}}",
+        "original": "{{FIELD_127}}",
+        "location": "table[6].cell[11,9]"
+      },
+      {
+        "placeholder": "{{FIELD_129}}",
+        "original": "/",
+        "location": "table[6].cell[11,10]"
+      },
+      {
+        "placeholder": "{{FIELD_130}}",
+        "original": "/",
+        "location": "table[6].cell[11,11]"
+      },
+      {
+        "placeholder": "{{FIELD_131}}",
+        "original": "/",
+        "location": "table[6].cell[11,12]"
+      },
+      {
+        "placeholder": "{{FIELD_132}}",
+        "original": "LNR600-Ⅱ",
+        "location": "table[7].cell[3,0]"
+      },
+      {
+        "placeholder": "{{FIELD_133}}",
+        "original": "RA124017957-RA124017971",
+        "location": "table[7].cell[3,1]"
+      },
+      {
+        "placeholder": "{{FIELD_134}}",
+        "original": "合格",
+        "location": "table[7].cell[3,2]"
+      },
+      {
+        "placeholder": "{{FIELD_135}}",
+        "original": "合格",
+        "location": "table[7].cell[3,3]"
+      },
+      {
+        "placeholder": "{{FIELD_136}}",
+        "original": "LNR700-Ⅱ",
+        "location": "table[7].cell[7,0]"
+      },
+      {
+        "placeholder": "{{FIELD_137}}",
+        "original": "RA124017972-RA124018033",
+        "location": "table[7].cell[7,1]"
+      },
+      {
+        "placeholder": "{{FIELD_138}}",
+        "original": "LNR700-Ⅱ-R",
+        "location": "table[7].cell[11,0]"
+      },
+      {
+        "placeholder": "{{FIELD_139}}",
+        "original": "RA124018034-RA124018035",
+        "location": "table[7].cell[11,1]"
+      },
+      {
+        "placeholder": "{{FIELD_140}}",
+        "original": "LRB700-Ⅱ",
+        "location": "table[7].cell[15,0]"
+      },
+      {
+        "placeholder": "{{FIELD_141}}",
+        "original": "RA124018036-RA124018093",
+        "location": "table[7].cell[15,1]"
+      },
+      {
+        "placeholder": "{{FIELD_142}}",
+        "original": "LNR600-Ⅱ",
+        "location": "table[8].cell[3,0]"
+      },
+      {
+        "placeholder": "{{FIELD_143}}",
+        "original": "RA124017957-RA124017971",
+        "location": "table[8].cell[3,1]"
+      },
+      {
+        "placeholder": "{{FIELD_144}}",
+        "original": "合格",
+        "location": "table[8].cell[3,2]"
+      },
+      {
+        "placeholder": "{{FIELD_145}}",
+        "original": "合格",
+        "location": "table[8].cell[3,3]"
+      },
+      {
+        "placeholder": "{{FIELD_146}}",
+        "original": "LNR700-Ⅱ",
+        "location": "table[8].cell[7,0]"
+      },
+      {
+        "placeholder": "{{FIELD_147}}",
+        "original": "RA124017972-RA124018033",
+        "location": "table[8].cell[7,1]"
+      },
+      {
+        "placeholder": "{{FIELD_148}}",
+        "original": "合格",
+        "location": "table[8].cell[7,2]"
+      },
+      {
+        "placeholder": "{{FIELD_149}}",
+        "original": "合格",
+        "location": "table[8].cell[7,3]"
+      },
+      {
+        "placeholder": "{{FIELD_150}}",
+        "original": "/",
+        "location": "table[8].cell[7,4]"
+      },
+      {
+        "placeholder": "{{FIELD_151}}",
+        "original": "/",
+        "location": "table[8].cell[7,5]"
+      },
+      {
+        "placeholder": "{{FIELD_152}}",
+        "original": "/",
+        "location": "table[8].cell[7,6]"
+      },
+      {
+        "placeholder": "{{FIELD_153}}",
+        "original": "LNR700-Ⅱ-R",
+        "location": "table[8].cell[11,0]"
+      },
+      {
+        "placeholder": "{{FIELD_154}}",
+        "original": "RA124018034-RA124018035",
+        "location": "table[8].cell[11,1]"
+      },
+      {
+        "placeholder": "{{FIELD_155}}",
+        "original": "合格",
+        "location": "table[8].cell[11,2]"
+      },
+      {
+        "placeholder": "{{FIELD_156}}",
+        "original": "合格",
+        "location": "table[8].cell[11,3]"
+      },
+      {
+        "placeholder": "{{FIELD_157}}",
+        "original": "/",
+        "location": "table[8].cell[11,4]"
+      },
+      {
+        "placeholder": "{{FIELD_158}}",
+        "original": "/",
+        "location": "table[8].cell[11,5]"
+      },
+      {
+        "placeholder": "{{FIELD_159}}",
+        "original": "/",
+        "location": "table[8].cell[11,6]"
+      },
+      {
+        "placeholder": "{{FIELD_160}}",
+        "original": "LRB700-Ⅱ",
+        "location": "table[8].cell[15,0]"
+      },
+      {
+        "placeholder": "{{FIELD_161}}",
+        "original": "RA124018036-RA124018093",
+        "location": "table[8].cell[15,1]"
+      },
+      {
+        "placeholder": "{{FIELD_162}}",
+        "original": "合格",
+        "location": "table[8].cell[15,2]"
+      },
+      {
+        "placeholder": "{{FIELD_163}}",
+        "original": "合格",
+        "location": "table[8].cell[15,3]"
+      },
+      {
+        "placeholder": "{{FIELD_164}}",
+        "original": "合格",
+        "location": "table[8].cell[15,4]"
+      },
+      {
+        "placeholder": "{{FIELD_165}}",
+        "original": "合格",
+        "location": "table[8].cell[15,5]"
+      },
+      {
+        "placeholder": "{{FIELD_166}}",
+        "original": "合格",
+        "location": "table[8].cell[15,6]"
+      }
+    ],
+    "other": []
+  }
+}

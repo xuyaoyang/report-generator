@@ -1,0 +1,173 @@
+/* 检测报告生成系统 - 淡蓝色主题 */
+
+QMainWindow {
+    background-color: #F5F7FA;
+}
+
+QMenuBar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    padding: 2px;
+}
+
+QMenuBar::item:selected {
+    background-color: #B3D9FF;
+    border-radius: 4px;
+}
+
+QToolBar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E0E0E0;
+    spacing: 8px;
+    padding: 6px 12px;
+}
+
+QPushButton {
+    background-color: #4A90D9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-family: "Microsoft YaHei";
+    font-size: 13px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    background-color: #3A7BC8;
+}
+
+QPushButton:pressed {
+    background-color: #2D6AB5;
+}
+
+QPushButton:disabled {
+    background-color: #C0C0C0;
+    color: #888888;
+}
+
+QPushButton#btnSecondary {
+    background-color: #FFFFFF;
+    color: #4A90D9;
+    border: 1px solid #4A90D9;
+}
+
+QPushButton#btnSecondary:hover {
+    background-color: #E8F2FC;
+}
+
+QGroupBox {
+    font-family: "Microsoft YaHei";
+    font-size: 13px;
+    font-weight: bold;
+    color: #333333;
+    border: 1px solid #D0D0D0;
+    border-radius: 6px;
+    margin-top: 12px;
+    padding-top: 16px;
+    background-color: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 12px;
+    padding: 0 6px;
+}
+
+QTableWidget {
+    font-family: "Microsoft YaHei";
+    font-size: 12px;
+    gridline-color: #E8E8E8;
+    background-color: #FFFFFF;
+    alternate-background-color: #F8FAFD;
+    border: 1px solid #D0D0D0;
+    border-radius: 4px;
+}
+
+QTableWidget::item {
+    padding: 4px 8px;
+}
+
+QTableWidget::item:selected {
+    background-color: #B3D9FF;
+    color: #333333;
+}
+
+QHeaderView::section {
+    background-color: #E8F2FC;
+    color: #333333;
+    font-weight: bold;
+    padding: 6px 8px;
+    border: none;
+    border-bottom: 2px solid #4A90D9;
+    border-right: 1px solid #D0D0D0;
+}
+
+QLineEdit, QSpinBox, QComboBox, QDateEdit {
+    font-family: "Microsoft YaHei";
+    font-size: 12px;
+    border: 1px solid #D0D0D0;
+    border-radius: 4px;
+    padding: 5px 8px;
+    background-color: #FFFFFF;
+}
+
+QLineEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border-color: #4A90D9;
+}
+
+QLabel {
+    font-family: "Microsoft YaHei";
+    font-size: 12px;
+    color: #333333;
+}
+
+QStatusBar {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E0E0E0;
+    font-family: "Microsoft YaHei";
+    font-size: 11px;
+    color: #888888;
+}
+
+QTabWidget::pane {
+    border: 1px solid #D0D0D0;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+}
+
+QTabBar::tab {
+    background-color: #F0F0F0;
+    font-family: "Microsoft YaHei";
+    font-size: 12px;
+    padding: 8px 20px;
+    margin-right: 2px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+QTabBar::tab:selected {
+    background-color: #4A90D9;
+    color: white;
+}
+
+QSplitter::handle {
+    background-color: #D0D0D0;
+}
+
+QSplitter::handle:hover {
+    background-color: #4A90D9;
+}
+
+QSplitter::handle:pressed {
+    background-color: #2D6AB5;
+}
+
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+QMessageBox {
+    font-family: "Microsoft YaHei";
+}

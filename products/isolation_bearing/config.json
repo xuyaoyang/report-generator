@@ -1,0 +1,55 @@
+{
+  "product_name": "隔震支座",
+  "description": "建筑隔震橡胶支座出厂检验报告",
+  "template": "template_prepared.docx",
+  "excel_template": "excel_template.xlsx",
+  "mapping": "param_mapping.json",
+  "sheets": ["项目基本信息", "产品型号清单", "力学性能检测数据", "外观尺寸检测数据"],
+  "archive_base": "output",
+  "max_models_in_template": 6,
+  "has_mechanical_detail": true,
+  "has_per_model_visual": true,
+  "max_mech_models_per_page": 4,
+  "sections": [
+    {"file": "01_cover.docx",          "repeat": 1},
+    {"file": "02_toc.docx",            "repeat": 1, "page_break_before": true},
+    {"file": "03_business_license.docx","repeat": 1, "page_break_before": true, "page_break_after": true},
+    {"file": "04_cert.docx",           "repeat": "model_count", "per_model": true, "page_break_before": true},
+    {"file": "05_mech_summary.docx",   "repeat": 1, "page_break_before": true, "page_break_after": true},
+    {"file": "06_mech_detail.docx",    "repeat": "mech_pages", "batch_size": 4, "page_break_before": true, "page_break_after": true},
+    {"file": "07_visual.docx",         "repeat": "model_count", "per_model": true, "page_break_before": true, "page_break_after": true},
+    {"file": "08_quality_commitment.docx","repeat": 1, "page_break_before": false}
+  ],
+  "anchor_text": {
+    "certificate": "产品合格证",
+    "quality_commitment": "产品质量承诺",
+    "appearance_report": "隔震橡胶支座外观质量及尺寸检测报告",
+    "mechanical_report": "隔震支座力学性能检验报告"
+  },
+  "ui_config": {
+    "product_table": {
+      "headers": ["产品型号", "支座编号范围", "数量", "生产日期", "检验标准"],
+      "data_keys": ["产品型号", "支座编号范围", "数量", "生产日期", "检验标准"]
+    },
+    "mechanical_tab": {
+      "label": "力学性能检测",
+      "headers": ["产品型号", "有效直径\n(mm)", "高度\n(mm)", "橡胶层厚\n(mm)",
+                  "压缩应力\n(MPa)", "压缩刚度\n(KN/mm)", "水平等效刚度\n(KN/mm)",
+                  "屈服后刚度\n(KN/mm)", "屈服力\n(KN)", "阻尼比\n(%)"],
+      "data_keys": ["产品型号", "支座有效直径(mm)", "支座高度(mm)", "橡胶层总厚(mm)",
+                    "压缩应力(MPa)", "设计压缩刚度(KN/mm)", "水平等效刚度(KN/mm)",
+                    "屈服后刚度(KN/mm)", "屈服力(KN)", "等效阻尼比(%)"]
+    },
+    "visual_tab": {
+      "label": "外观尺寸检测",
+      "headers": ["产品型号", "气泡", "杂质", "缺陷", "凹凸不平",
+                  "胶料粘结", "裂纹", "钢板外露", "产品标识", "尺寸偏差"],
+      "data_keys": ["产品型号",
+                    "检测1-气泡(合格/不合格)", "检测2-杂质(合格/不合格)",
+                    "检测3-缺陷(合格/不合格)", "检测4-凹凸不平(合格/不合格)",
+                    "检测5-胶料粘结不良(合格/不合格)", "检测6-裂纹(合格/不合格)",
+                    "检测7-钢板外露(合格/不合格)", "检测8-产品标识(合格/不合格)",
+                    "检测9-平面尺寸偏差(合格/不合格)"]
+    }
+  }
+}

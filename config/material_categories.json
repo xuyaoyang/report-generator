@@ -1,0 +1,75 @@
+{
+  "expiry_months": 24,
+  "categories": {
+    "钢板": {
+      "label": "钢板",
+      "order": 1,
+      "group_by": ["material_grade", "thickness"],
+      "params": [
+        {"key": "thickness", "label": "厚度(mm)", "type": "number", "short": "厚度"},
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+      ]
+    },
+    "钢筋": {
+      "label": "钢筋",
+      "order": 2,
+      "group_by": ["diameter", "material_grade"],
+      "params": [
+        {"key": "diameter", "label": "直径(mm)", "type": "number", "short": "直径"},
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+      ]
+    },
+    "圆钢": {
+      "label": "圆钢",
+      "order": 3,
+      "group_by": ["diameter", "material_grade"],
+      "params": [
+        {"key": "diameter", "label": "直径(mm)", "type": "number", "short": "直径"},
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+      ]
+    },
+    "铅": {
+      "label": "铅",
+      "order": 4,
+      "group_by": ["purity"],
+      "params": [
+        {"key": "purity", "label": "纯度", "type": "string"}
+      ]
+    },
+    "油漆": {
+      "label": "油漆",
+      "order": 5,
+      "group_by": ["brand"],
+      "params": [
+        {"key": "brand", "label": "牌号", "type": "string"}
+      ]
+    },
+    "商混": {
+      "label": "商混",
+      "order": 6,
+      "group_by": ["strength_grade"],
+      "params": [
+        {"key": "strength_grade", "label": "强度等级", "type": "string", "short": "强度"}
+      ]
+    },
+    "缸筒": {
+      "label": "缸筒",
+      "order": 7,
+      "group_by": ["material_grade"],
+      "params": [
+        {"key": "outer_diameter", "label": "外径(mm)", "type": "number", "short": "外径"},
+        {"key": "wall_thickness", "label": "壁厚(mm)", "type": "number", "short": "壁厚"},
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+      ]
+    },
+    "螺栓": {
+      "label": "螺栓",
+      "order": 8,
+      "group_by": ["specification", "grade"],
+      "params": [
+        {"key": "specification", "label": "规格", "type": "string", "short": "规格"},
+        {"key": "grade", "label": "等级", "type": "string", "short": "等级"}
+      ]
+    }
+  }
+}
