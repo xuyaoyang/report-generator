@@ -16,6 +16,8 @@ dist/
 output/
 debug_curve_images/
 _render_v21_tail/
+debug_*_render*/
+debug_*_source*/
 
 # Local business data / source materials (never sync with Git)
 image_lib/

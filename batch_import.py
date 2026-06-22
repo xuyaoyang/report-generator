@@ -27,7 +27,8 @@ FOLDER_TO_CATEGORY = {
     '铅芯': '铅',
     '油漆': '油漆',
     '商混材质单': '商混',
-    '缸筒材质单': '缸筒',
+    '缸筒材质单': '无缝管',
+    '无缝管材质单': '无缝管',
     '螺栓材质单': '螺栓',
 }
 
@@ -36,6 +37,12 @@ FOLDER_TO_CATEGORY = {
 def extract_steel_plate(name):
     """钢板: extract thickness + material_grade from filename."""
     params = {}
+    # "16-2200-Q355B": first number is thickness, second is plate width.
+    m = re.search(r'^(\d+\.?\d*)\s*[-x×]\s*\d{3,4}\s*[-x×]\s*Q(\d+)\s*B?', name, re.I)
+    if m:
+        params['thickness'] = m.group(1)
+        params['material_grade'] = 'Q' + m.group(2) + ('B' if 'B' in m.group(0).upper() else '')
+        return params
     # "10-Q355" "20-2200-235B" "16-Q235"
     m = re.search(r'(\d+\.?\d*)\s*[-x×]\s*Q(\d+)', name)
     if m:
@@ -174,7 +181,7 @@ def extract_concrete(name):
 
 
 def extract_cylinder(name):
-    """缸筒: extract outer_diameter x wall_thickness."""
+    """无缝管: extract outer_diameter x wall_thickness."""
     params = {}
     # "133x20" "180x22-松亚" "168×8连接管"
     m = re.search(r'(\d{2,3})\s*[x×]\s*(\d{1,3})', name)
@@ -210,7 +217,7 @@ EXTRACTORS = {
     '铅': extract_lead,
     '油漆': extract_paint,
     '商混': extract_concrete,
-    '缸筒': extract_cylinder,
+    '无缝管': extract_cylinder,
     '螺栓': extract_bolt,
 }
 

@@ -108,6 +108,203 @@ ED_KEYS = {
 }
 
 
+IBE_KEYS = {
+    'project': '\u9879\u76ee\u540d\u79f0',
+    'supplier': '\u4ea7\u54c1\u4f9b\u5e94\u5546',
+    'address': '\u5236\u9020\u5730\u5740',
+    'phone': '\u8054\u7cfb\u7535\u8bdd',
+    'date': '\u5236\u9020\u65e5\u671f',
+    'inspector': '\u68c0\u9a8c\u5458',
+    'reviewer': '\u5ba1\u6838',
+    'issuer': '\u7b7e\u53d1',
+    'bearing_model': '\u652f\u5ea7\u89c4\u683c',
+    'bearing_qty': '\u652f\u5ea7\u6570\u91cf',
+    'batch': '\u751f\u4ea7\u6279\u53f7',
+    'production_date': '\u751f\u4ea7\u65e5\u671f',
+}
+
+
+def _parse_isolation_bearing_diameter(model):
+    match = re.search(r'(?<!\d)(1[0-6]00|[4-9]00)(?!\d)', str(model or ''))
+    if not match:
+        raise ValueError(
+            f'\u65e0\u6cd5\u4ece\u652f\u5ea7\u89c4\u683c“{model}”\u8bc6\u522b400~1600\u7684\u516c\u79f0\u76f4\u5f84')
+    return match.group(1)
+
+
+def _parse_whole_number(value, field_name):
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        raise ValueError(f'{field_name}\u5fc5\u987b\u662f\u6570\u5b57')
+    if number < 0 or not number.is_integer():
+        raise ValueError(f'{field_name}\u5fc5\u987b\u662f\u975e\u8d1f\u6574\u6570')
+    return int(number)
+
+
+def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
+    with open(os.path.join(product_dir, 'standard_connections.json'),
+              'r', encoding='utf-8') as stream:
+        standards = json.load(stream)
+
+    project = data.get('project_info', {})
+    default_date = str(project.get(IBE_KEYS['date'], ''))
+    anchor_groups = {}
+    plate_groups = {}
+
+    for product in data.get('product_list', []):
+        model = str(product.get(IBE_KEYS['bearing_model'], '')).strip()
+        diameter = _parse_isolation_bearing_diameter(model)
+        standard = standards.get(diameter)
+        if not standard:
+            raise ValueError(f'\u672a\u627e\u5230D{diameter}\u7684II\u578b\u8fde\u63a5\u53c2\u6570')
+        qty = _parse_whole_number(
+            product.get(IBE_KEYS['bearing_qty'], 0),
+            f'{model}\u7684\u652f\u5ea7\u6570\u91cf')
+        batch = str(product.get(IBE_KEYS['batch'], '')).strip()
+        production_date = str(
+            product.get(IBE_KEYS['production_date'], '') or default_date).strip()
+
+        anchor_spec = (
+            f'\u03c6{standard["anchor_diameter"]}\u00d7{standard["anchor_length"]}')
+        anchor_key = (anchor_spec, batch, production_date)
+        if anchor_key not in anchor_groups:
+            anchor_groups[anchor_key] = {
+                'name': '\u9884\u57cb\u4ef6',
+                'spec': anchor_spec,
+                'batch': batch,
+                'production_date': production_date,
+                'qty': 0,
+                'diameter': standard['anchor_diameter'],
+                'length': standard['anchor_length'],
+                'sleeve_od': standard['sleeve_od'],
+                'sleeve_length': standard['sleeve_length'],
+                'material_grade': 'HRB400E',
+                'manufacturer': '',
+                'material_batch': '',
+            }
+        anchor_groups[anchor_key]['qty'] += qty * standard['multiplier']
+
+        plate_spec = (
+            f'{standard["plate_size"]}\u00d7{standard["plate_size"]}'
+            f'\u00d7{standard["plate_thickness"]}')
+        plate_key = (plate_spec, batch, production_date)
+        if plate_key not in plate_groups:
+            plate_groups[plate_key] = {
+                'name': '\u9884\u57cb\u94a2\u677f',
+                'spec': plate_spec,
+                'batch': batch,
+                'production_date': production_date,
+                'qty': 0,
+                'side': standard['plate_size'],
+                'thickness': standard['plate_thickness'],
+                'material_grade': 'Q235B',
+                'manufacturer': '',
+                'material_batch': '',
+            }
+        plate_groups[plate_key]['qty'] += qty
+
+    anchors = list(anchor_groups.values())
+    plates = list(plate_groups.values())
+    cert_ids = []
+    if material_manager:
+        cert_cache = {}
+        for item in anchors:
+            key = ('\u94a2\u7b4b', item['diameter'], item['material_grade'])
+            if key not in cert_cache:
+                cert_cache[key] = material_manager.find_latest_certificate(
+                    '\u94a2\u7b4b', {
+                        'diameter': str(item['diameter']),
+                        'material_grade': item['material_grade'],
+                    })
+            cert = cert_cache[key]
+            if cert:
+                item['material_grade'] = cert.get('params', {}).get(
+                    'material_grade', item['material_grade'])
+                item['manufacturer'] = cert.get('params', {}).get('manufacturer', '')
+                item['material_batch'] = cert.get('batch_number', '')
+                cert_ids.append(cert['id'])
+        for item in plates:
+            key = ('\u94a2\u677f', item['thickness'], item['material_grade'])
+            if key not in cert_cache:
+                cert_cache[key] = material_manager.find_latest_certificate(
+                    '\u94a2\u677f', {
+                        'thickness': str(item['thickness']),
+                        'material_grade': item['material_grade'],
+                    })
+            cert = cert_cache[key]
+            if cert:
+                item['material_grade'] = cert.get('params', {}).get(
+                    'material_grade', item['material_grade'])
+                item['manufacturer'] = cert.get('params', {}).get('manufacturer', '')
+                item['material_batch'] = cert.get('batch_number', '')
+                cert_ids.append(cert['id'])
+
+    prepared = dict(data)
+    prepared['embedded_anchor_components'] = anchors
+    prepared['embedded_plate_components'] = plates
+    prepared['embedded_certificate_rows'] = anchors + plates
+    prepared['_auto_material_cert_ids'] = list(dict.fromkeys(cert_ids))
+    return prepared
+
+
+def _build_isolation_embedded_common_fill_map(data):
+    project = data.get('project_info', {})
+    return {
+        '{{IBE_TITLE}}': '\u9884\u57cb\u4ef6\u51fa\u5382\u8d44\u6599',
+        '{{IBE_PROJECT}}': str(project.get(IBE_KEYS['project'], '')),
+        '{{IBE_SUPPLIER}}': str(project.get(IBE_KEYS['supplier'], '')),
+        '{{IBE_ADDRESS}}': str(project.get(IBE_KEYS['address'], '')),
+        '{{IBE_PHONE}}': str(project.get(IBE_KEYS['phone'], '')),
+        '{{IBE_DATE}}': str(project.get(IBE_KEYS['date'], '')),
+        '{{IBE_INSPECTOR}}': str(project.get(IBE_KEYS['inspector'], '')),
+        '{{IBE_REVIEWER}}': str(project.get(IBE_KEYS['reviewer'], '')),
+        '{{IBE_ISSUER}}': str(project.get(IBE_KEYS['issuer'], '')),
+    }
+
+
+def _build_isolation_embedded_cert_fill_map(data, rows):
+    fill = _build_isolation_embedded_common_fill_map(data)
+    for index in range(1, 14):
+        item = rows[index - 1] if index - 1 < len(rows) else {}
+        fill.update({
+            f'{{{{IBE_CERT_{index}_NAME}}}}': str(item.get('name', '/')),
+            f'{{{{IBE_CERT_{index}_SPEC}}}}': str(item.get('spec', '/')),
+            f'{{{{IBE_CERT_{index}_BATCH}}}}': str(item.get('batch', '/')),
+            f'{{{{IBE_CERT_{index}_DATE}}}}': str(item.get('production_date', '/')),
+            f'{{{{IBE_CERT_{index}_QTY}}}}': str(item.get('qty', '/')),
+        })
+    return fill
+
+
+def _build_isolation_embedded_anchor_fill_map(data, item):
+    fill = _build_isolation_embedded_common_fill_map(data)
+    fill.update({
+        '{{IBE_ANCHOR_SPEC}}': str(item.get('spec', '')),
+        '{{IBE_ANCHOR_DIAMETER}}': str(item.get('diameter', '')),
+        '{{IBE_ANCHOR_LENGTH}}': str(item.get('length', '')),
+        '{{IBE_SLEEVE_OD}}': str(item.get('sleeve_od', '')),
+        '{{IBE_SLEEVE_LENGTH}}': str(item.get('sleeve_length', '')),
+        '{{IBE_ANCHOR_GRADE}}': str(item.get('material_grade', '')),
+        '{{IBE_ANCHOR_MANUFACTURER}}': str(item.get('manufacturer', '')),
+        '{{IBE_ANCHOR_BATCH}}': str(item.get('material_batch', '')),
+    })
+    return fill
+
+
+def _build_isolation_embedded_plate_fill_map(data, item):
+    fill = _build_isolation_embedded_common_fill_map(data)
+    fill.update({
+        '{{IBE_PLATE_SPEC}}': str(item.get('spec', '')),
+        '{{IBE_PLATE_SIDE_STANDARD}}': f'{item.get("side", "")}\u00b12',
+        '{{IBE_PLATE_THICKNESS_STANDARD}}': f'{item.get("thickness", "")}\u00b10.5',
+        '{{IBE_PLATE_GRADE}}': str(item.get('material_grade', '')),
+        '{{IBE_PLATE_MANUFACTURER}}': str(item.get('manufacturer', '')),
+        '{{IBE_PLATE_BATCH}}': str(item.get('material_batch', '')),
+    })
+    return fill
+
+
 def _build_embedded_damper_parts_fill_map(data):
     project = data.get('project_info', {})
     products = data.get('product_list', [])
@@ -233,6 +430,8 @@ def build_fill_map(data, product_dir=None, product_type='isolation_bearing'):
         return _build_friction_fill_map(data)
     if product_type == 'embedded_damper_parts':
         return _build_embedded_damper_parts_fill_map(data)
+    if product_type == 'isolation_bearing_embedded_parts':
+        return _build_isolation_embedded_common_fill_map(data)
 
     if product_dir is None:
         product_dir = os.path.join(
@@ -1342,6 +1541,10 @@ def generate_report(template_path, excel_data, output_dir,
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
 
+    if product_type == 'isolation_bearing_embedded_parts':
+        excel_data = _prepare_isolation_embedded_data(
+            excel_data, product_dir, material_manager)
+
     sections = config.get('sections', [])
     if not sections:
         raise ValueError(f'No sections defined in {config_path}')
@@ -1373,6 +1576,45 @@ def generate_report(template_path, excel_data, output_dir,
         repeat_spec = sec.get('repeat', 1)
         per_model = sec.get('per_model', False)
         batch_size = sec.get('batch_size', 0)
+
+        if product_type == 'isolation_bearing_embedded_parts':
+            if repeat_spec == 'certificate_pages':
+                rows = excel_data.get('embedded_certificate_rows', [])
+                batches = [rows[i:i + 13] for i in range(0, len(rows), 13)] or [[]]
+                fill_maps = [
+                    _build_isolation_embedded_cert_fill_map(excel_data, batch)
+                    for batch in batches
+                ]
+                for fill_map in fill_maps:
+                    section_specs.append({
+                        'template': tmpl,
+                        'repeat': 1,
+                        'fill_map': fill_map,
+                        'page_break_before': sec.get('page_break_before', True),
+                    })
+                continue
+            if repeat_spec == 'anchor_count':
+                items = excel_data.get('embedded_anchor_components', [])
+                for item in items:
+                    section_specs.append({
+                        'template': tmpl,
+                        'repeat': 1,
+                        'fill_map': _build_isolation_embedded_anchor_fill_map(
+                            excel_data, item),
+                        'page_break_before': sec.get('page_break_before', True),
+                    })
+                continue
+            if repeat_spec == 'plate_count':
+                items = excel_data.get('embedded_plate_components', [])
+                for item in items:
+                    section_specs.append({
+                        'template': tmpl,
+                        'repeat': 1,
+                        'fill_map': _build_isolation_embedded_plate_fill_map(
+                            excel_data, item),
+                        'page_break_before': sec.get('page_break_before', True),
+                    })
+                continue
 
         if product_type == 'friction_pendulum' and section_file == '06_mech_detail.docx':
             serial_rows = _expand_friction_serials(products)
@@ -1436,6 +1678,10 @@ def generate_report(template_path, excel_data, output_dir,
                 spec['batch_counts'] = [model_count]
             section_specs.append(spec)
 
+    if product_type == 'isolation_bearing_embedded_parts':
+        for spec in section_specs[1:]:
+            spec['stable_page_break_before'] = True
+
     # Output path
     project_name = excel_data.get('project_info', {}).get('项目名称', '未命名项目')
     report_date = excel_data.get('project_info', {}).get('制造日期', '未知日期')
@@ -1452,6 +1698,10 @@ def generate_report(template_path, excel_data, output_dir,
         version += 1
 
     try:
+        if product_type == 'isolation_bearing_embedded_parts':
+            auto_ids = excel_data.get('_auto_material_cert_ids', [])
+            if auto_ids:
+                selected_cert_ids = auto_ids
         compose_report(section_specs, output_path, excel_data, material_manager, selected_cert_ids)
     finally:
         if curve_temp_dir:

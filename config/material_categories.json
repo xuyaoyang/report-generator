@@ -7,7 +7,8 @@
       "group_by": ["material_grade", "thickness"],
       "params": [
         {"key": "thickness", "label": "厚度(mm)", "type": "number", "short": "厚度"},
-        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"},
+        {"key": "manufacturer", "label": "生产厂家", "type": "string", "short": "厂家"}
       ]
     },
     "钢筋": {
@@ -16,7 +17,8 @@
       "group_by": ["diameter", "material_grade"],
       "params": [
         {"key": "diameter", "label": "直径(mm)", "type": "number", "short": "直径"},
-        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"},
+        {"key": "manufacturer", "label": "生产厂家", "type": "string", "short": "厂家"}
       ]
     },
     "圆钢": {
@@ -25,7 +27,8 @@
       "group_by": ["diameter", "material_grade"],
       "params": [
         {"key": "diameter", "label": "直径(mm)", "type": "number", "short": "直径"},
-        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"}
+        {"key": "material_grade", "label": "材质牌号", "type": "string", "short": "牌号"},
+        {"key": "manufacturer", "label": "生产厂家", "type": "string", "short": "厂家"}
       ]
     },
     "铅": {
@@ -52,10 +55,10 @@
         {"key": "strength_grade", "label": "强度等级", "type": "string", "short": "强度"}
       ]
     },
-    "缸筒": {
-      "label": "缸筒",
+    "无缝管": {
+      "label": "无缝管",
       "order": 7,
-      "group_by": ["material_grade"],
+      "group_by": ["outer_diameter", "wall_thickness"],
       "params": [
         {"key": "outer_diameter", "label": "外径(mm)", "type": "number", "short": "外径"},
         {"key": "wall_thickness", "label": "壁厚(mm)", "type": "number", "short": "壁厚"},

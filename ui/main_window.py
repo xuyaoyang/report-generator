@@ -395,6 +395,10 @@ class ReportGenerator(QMainWindow):
             self.visual_table.horizontalHeader().setSectionResizeMode(
                 QHeaderView.Interactive)
             self.visual_table.horizontalHeader().setStretchLastSection(True)
+        for i in range(self.tabs.count()):
+            if self.tabs.tabText(i) == '外观尺寸检测':
+                self.tabs.setTabVisible(i, bool(vt.get('headers')))
+                break
 
     def _update_project_field_visibility(self):
         if hasattr(self, 'hysteresis_row_widget'):

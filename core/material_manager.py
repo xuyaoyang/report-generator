@@ -3,11 +3,13 @@ Material certificate image manager: storage, CRUD, matching, and
 Word report image insertion.
 """
 import os
+import copy
 import json
 import sqlite3
 import shutil
 import uuid
 import re
+from decimal import Decimal, InvalidOperation
 from datetime import datetime
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -57,6 +59,7 @@ class MaterialManager:
     def _init_db(self):
         os.makedirs(self.image_lib_dir, exist_ok=True)
         conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
         conn.execute('''CREATE TABLE IF NOT EXISTS material_certificates (
             id              INTEGER PRIMARY KEY AUTOINCREMENT,
             category        TEXT NOT NULL,
@@ -84,7 +87,87 @@ class MaterialManager:
             except sqlite3.OperationalError:
                 pass
         conn.commit()
+        self._migrate_material_metadata(conn)
         conn.close()
+        self._migrate_category_folder('\u7f38\u7b52', '\u65e0\u7f1d\u7ba1')
+
+    @staticmethod
+    def _canonical_number(value):
+        text = str(value or '').strip()
+        if not text:
+            return ''
+        try:
+            number = Decimal(text)
+        except InvalidOperation:
+            return text
+        normalized = format(number, 'f')
+        if '.' in normalized:
+            normalized = normalized.rstrip('0').rstrip('.')
+        return normalized or '0'
+
+    def _normalize_params(self, category, params):
+        result = dict(params or {})
+        definitions = {
+            item['key']: item for item in
+            self.categories.get(category, {}).get('params', [])
+        }
+        for key, value in list(result.items()):
+            if definitions.get(key, {}).get('type') == 'number':
+                result[key] = self._canonical_number(value)
+            elif key == 'material_grade':
+                grade = str(value or '').strip()
+                aliases = {
+                    'Q355': 'Q355B',
+                    'Q355B': 'Q355B',
+                    'Q355BB': 'Q355B',
+                    '\u666e\u677f': 'Q235B',
+                }
+                result[key] = aliases.get(grade.upper(), aliases.get(grade, grade))
+        return result
+
+    def _migrate_material_metadata(self, conn):
+        conn.execute(
+            'UPDATE material_certificates SET category = ? WHERE category = ?',
+            ('\u65e0\u7f1d\u7ba1', '\u7f38\u7b52'))
+        rows = conn.execute(
+            'SELECT id, category, params, batch_number, original_filename, '
+            'image_filename FROM material_certificates').fetchall()
+        for row in rows:
+            try:
+                params = json.loads(row['params'] or '{}')
+            except (TypeError, json.JSONDecodeError):
+                params = {}
+            if row['category'] == '\u65e0\u7f1d\u7ba1':
+                source = ' '.join((
+                    row['batch_number'] or '', row['original_filename'] or '',
+                    row['image_filename'] or ''))
+                match = re.search(r'(\d{2,3})\s*[x\u00d7]\s*(\d{1,3})', source)
+                if match:
+                    params['outer_diameter'] = match.group(1)
+                    params['wall_thickness'] = match.group(2)
+            normalized = self._normalize_params(row['category'], params)
+            encoded = json.dumps(normalized, ensure_ascii=False)
+            if encoded != (row['params'] or '{}'):
+                conn.execute(
+                    'UPDATE material_certificates SET params = ? WHERE id = ?',
+                    (encoded, row['id']))
+        conn.commit()
+
+    def _migrate_category_folder(self, old_category, new_category):
+        old_dir = os.path.join(self.image_lib_dir, old_category)
+        if not os.path.isdir(old_dir):
+            return
+        new_dir = os.path.join(self.image_lib_dir, new_category)
+        os.makedirs(new_dir, exist_ok=True)
+        for name in os.listdir(old_dir):
+            old_path = os.path.join(old_dir, name)
+            new_path = os.path.join(new_dir, name)
+            if not os.path.exists(new_path):
+                shutil.move(old_path, new_path)
+        try:
+            os.rmdir(old_dir)
+        except OSError:
+            pass
 
     def _connect(self):
         conn = sqlite3.connect(self.db_path)
@@ -94,6 +177,7 @@ class MaterialManager:
     def _row_to_dict(self, row):
         d = dict(row)
         d['params'] = json.loads(d['params']) if d['params'] else {}
+        d['params'] = self._normalize_params(d['category'], d['params'])
         d['rotation'] = int(d.get('rotation') or 0) % 360
         return d
 
@@ -189,6 +273,7 @@ class MaterialManager:
                         source_path=None, notes='', cert_date=''):
         if params is None:
             params = {}
+        params = self._normalize_params(category, params)
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         image_filename = ''
@@ -262,6 +347,9 @@ class MaterialManager:
         if new_category not in self.categories:
             updates.pop('category', None)
             new_category = old['category']
+        new_params = self._normalize_params(new_category, new_params)
+        if 'params' in updates or 'category' in updates:
+            updates['params'] = new_params
 
         # Auto-calculate is_expired from cert_date if date is provided
         new_date = updates.get('cert_date', old.get('cert_date', ''))
@@ -640,6 +728,29 @@ class MaterialManager:
     # Matching
     # =================================================================
 
+    def find_latest_certificate(self, category, required_params):
+        """Return the newest valid certificate matching all required params."""
+        candidates = []
+        for cert in self.get_certificates_by_category(
+                category, exclude_expired=True):
+            if self._params_match(
+                    cert.get('params', {}), required_params, category):
+                candidates.append(cert)
+
+        def recency_key(cert):
+            cert_date = re.sub(r'\D', '', str(cert.get('cert_date', '')))
+            if len(cert_date) >= 6:
+                cert_date = cert_date[:6]
+            else:
+                cert_date = '000000'
+            return (
+                cert_date,
+                str(cert.get('updated_at', '')),
+                int(cert.get('id') or 0),
+            )
+
+        return max(candidates, key=recency_key) if candidates else None
+
     def get_certs_by_ids(self, cert_ids):
         """Get certificates by their IDs, grouped by category in display order.
 
@@ -778,8 +889,18 @@ class MaterialManager:
         All keys in req_spec must exist and match in cert_params."""
         if not req_spec:
             return True  # no spec requirement = match any cert in category
+        param_types = {
+            item['key']: item.get('type', 'string')
+            for item in self.categories.get(category, {}).get('params', [])
+        }
         for key, val in req_spec.items():
             cert_val = cert_params.get(key, '')
+            if param_types.get(key) == 'number':
+                try:
+                    if float(cert_val) == float(val):
+                        continue
+                except (TypeError, ValueError):
+                    pass
             if str(cert_val).strip() != str(val).strip():
                 return False
         return True
@@ -798,23 +919,15 @@ class MaterialManager:
         except Exception:
             return 'portrait'
 
-    def _make_section_break(self, orientation='portrait'):
+    def _make_section_break(self, orientation='portrait', base_section=None):
         """Create a paragraph with w:sectPr that ends the current section
         and sets its page orientation. The section break also acts as a
         page break (nextPage is the default type)."""
         p = OxmlElement('w:p')
         pPr = OxmlElement('w:pPr')
-        sectPr = OxmlElement('w:sectPr')
-
-        pgSz = OxmlElement('w:pgSz')
-        if orientation == 'landscape':
-            pgSz.set(qn('w:w'), '16839')
-            pgSz.set(qn('w:h'), '11906')
-            pgSz.set(qn('w:orient'), 'landscape')
-        else:
-            pgSz.set(qn('w:w'), '11906')
-            pgSz.set(qn('w:h'), '16839')
-        sectPr.append(pgSz)
+        sectPr = (copy.deepcopy(base_section) if base_section is not None
+                  else OxmlElement('w:sectPr'))
+        self._set_section_orientation(sectPr, orientation)
 
         pPr.append(sectPr)
         p.append(pPr)
@@ -952,12 +1065,15 @@ class MaterialManager:
                     prev_pPr.find(qn('w:sectPr')) is not None
                 )
             if not prev_has_section_break:
-                elements_to_insert.append(self._make_section_break('portrait'))
+                elements_to_insert.append(
+                    self._make_section_break('portrait', anchor_elem))
         else:
             # Section break to close the previous section as portrait before
             # the first material certificate. This prevents the previous
             # section from inheriting the first cert's orientation.
-            elements_to_insert.append(self._make_section_break('portrait'))
+            body_section = body.find(qn('w:sectPr'))
+            elements_to_insert.append(
+                self._make_section_break('portrait', body_section))
 
         for group_idx, group in enumerate(matched_certs):
             cat_key = group['category']

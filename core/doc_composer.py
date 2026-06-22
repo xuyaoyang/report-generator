@@ -126,6 +126,28 @@ def _make_page_break_para():
     return p
 
 
+def _set_page_break_before_first_content(doc):
+    """Start a section on a new page without an overflow-prone break paragraph."""
+    body = doc.element.body
+    for child in list(body):
+        tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
+        if tag == 'p':
+            p_pr = child.find(qn('w:pPr'))
+            if p_pr is None:
+                p_pr = OxmlElement('w:pPr')
+                child.insert(0, p_pr)
+            if p_pr.find(qn('w:pageBreakBefore')) is None:
+                p_pr.append(OxmlElement('w:pageBreakBefore'))
+            return
+        if tag == 'tbl':
+            paragraph = OxmlElement('w:p')
+            p_pr = OxmlElement('w:pPr')
+            p_pr.append(OxmlElement('w:pageBreakBefore'))
+            paragraph.append(p_pr)
+            child.addprevious(paragraph)
+            return
+
+
 def _absorb_empty_pb_paras(doc):
     """Post-compose step: find empty paragraphs that only contain a page break,
     migrate the page break into the preceding content paragraph's last run,
@@ -252,7 +274,10 @@ def compose_report(section_specs, output_path, excel_data,
             spec.get('image_paths'))
 
         if previous_spec.get('page_break_after', False) or spec.get('page_break_before', True):
-            master.add_page_break()
+            if spec.get('stable_page_break_before', False):
+                _set_page_break_before_first_content(section_doc)
+            else:
+                master.add_page_break()
         composer.append(section_doc)
         previous_spec = spec
 
