@@ -231,7 +231,7 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
                     '\u94a2\u677f', {
                         'thickness': str(item['thickness']),
                         'material_grade': item['material_grade'],
-                    })
+                    }, numeric_tolerances={'thickness': 0.3})
             cert = cert_cache[key]
             if cert:
                 item['material_grade'] = cert.get('params', {}).get(

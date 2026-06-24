@@ -30,7 +30,7 @@ class MaterialManager:
         with open(config_path, 'r', encoding='utf-8') as f:
             self.category_config = json.load(f)
         self.categories = self.category_config['categories']
-        self.expiry_months = self.category_config.get('expiry_months', 24)
+        self.expiry_months = self.category_config.get('expiry_months', 36)
         self._config_path = config_path
 
         self.db_path = os.path.join(self.image_lib_dir, 'material_certs.db')
@@ -728,11 +728,17 @@ class MaterialManager:
     # Matching
     # =================================================================
 
-    def find_latest_certificate(self, category, required_params):
-        """Return the newest valid certificate matching all required params."""
+    def find_latest_certificate(self, category, required_params,
+                                numeric_tolerances=None):
+        """Return the newest valid certificate matching the requirements.
+
+        Exact matches are preferred.  ``numeric_tolerances`` permits a nearest
+        numeric fallback when no exact match exists.
+        """
+        valid_certs = self.get_certificates_by_category(
+            category, exclude_expired=True)
         candidates = []
-        for cert in self.get_certificates_by_category(
-                category, exclude_expired=True):
+        for cert in valid_certs:
             if self._params_match(
                     cert.get('params', {}), required_params, category):
                 candidates.append(cert)
@@ -749,7 +755,41 @@ class MaterialManager:
                 int(cert.get('id') or 0),
             )
 
-        return max(candidates, key=recency_key) if candidates else None
+        if candidates:
+            return max(candidates, key=recency_key)
+
+        tolerances = numeric_tolerances or {}
+        if not tolerances:
+            return None
+
+        strict_params = {
+            key: value for key, value in required_params.items()
+            if key not in tolerances
+        }
+        fallback = []
+        for cert in valid_certs:
+            cert_params = cert.get('params', {})
+            if not self._params_match(cert_params, strict_params, category):
+                continue
+            distances = []
+            try:
+                for key, tolerance in tolerances.items():
+                    distance = abs(float(cert_params.get(key)) -
+                                   float(required_params[key]))
+                    if distance > float(tolerance):
+                        break
+                    distances.append(distance)
+                else:
+                    fallback.append((sum(distances), cert))
+            except (KeyError, TypeError, ValueError):
+                continue
+
+        if not fallback:
+            return None
+        nearest_distance = min(distance for distance, _ in fallback)
+        nearest = [cert for distance, cert in fallback
+                   if distance == nearest_distance]
+        return max(nearest, key=recency_key)
 
     def get_certs_by_ids(self, cert_ids):
         """Get certificates by their IDs, grouped by category in display order.
