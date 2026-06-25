@@ -1,0 +1,66 @@
+{
+  "product_name": "消能减震墙板阻尼器",
+  "description": "消能减震墙板阻尼器出厂报告",
+  "template": "templates/01_cover.docx",
+  "excel_template": "excel_template.xlsx",
+  "mapping": "param_mapping.json",
+  "sheets": [
+    "项目基本信息",
+    "产品型号清单"
+  ],
+  "archive_base": "output",
+  "has_mechanical_detail": false,
+  "has_per_model_visual": false,
+  "auto_match_materials": false,
+  "sections": [
+    {
+      "file": "01_cover.docx",
+      "repeat": 1
+    },
+    {
+      "file": "02_toc.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "03_business_license.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "04_cert.docx",
+      "repeat": "model_count",
+      "per_model": true,
+      "page_break_before": true
+    },
+    {
+      "file": "05_inspection_report.docx",
+      "repeat": "model_count",
+      "per_model": true,
+      "page_break_before": true
+    },
+    {
+      "file": "06_material_title.docx",
+      "repeat": 1,
+      "page_break_before": true
+    }
+  ],
+  "ui_config": {
+    "product_table": {
+      "headers": [
+        "产品型号",
+        "数量",
+        "生产日期",
+        "检验标准",
+        "强度等级"
+      ],
+      "data_keys": [
+        "产品型号",
+        "数量",
+        "生产日期",
+        "检验标准",
+        "强度等级"
+      ]
+    }
+  }
+}

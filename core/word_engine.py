@@ -590,6 +590,43 @@ def _build_friction_detail_fill_map(rows):
     return fill
 
 
+def _wall_qty_with_unit(value):
+    text = str(value or '').strip()
+    if not text:
+        return ''
+    if text.endswith('件'):
+        return text
+    return f'{text}件'
+
+
+def _build_wall_damper_fill_map(data):
+    project = data.get('project_info', {})
+    products = data.get('product_list', [])
+    product = products[0] if products else {}
+    product_name = '消能减震墙板阻尼器'
+    standard = str(product.get('检验标准') or 'JG/T209-2012')
+    pass_text = '合格'
+
+    fill = {
+        '{{WALL_PROJECT_NAME}}': str(project.get('项目名称', '')),
+        '{{WALL_SUPPLIER}}': str(project.get(
+            '产品供应商', '四川融海运通抗震科技有限责任公司')),
+        '{{WALL_ADDRESS}}': str(project.get('制造地址', '')),
+        '{{WALL_PHONE}}': str(project.get('联系电话', '')),
+        '{{WALL_REPORT_DATE}}': str(project.get('制造日期', '')),
+        '{{WALL_PRODUCT_NAME}}': product_name,
+        '{{WALL_MODEL}}': str(product.get('产品型号', '')),
+        '{{WALL_PRODUCTION_DATE}}': str(
+            product.get('生产日期') or project.get('制造日期', '')),
+        '{{WALL_INSPECTOR}}': str(project.get('检验员', '')),
+        '{{WALL_QTY_WITH_UNIT}}': _wall_qty_with_unit(product.get('数量')),
+        '{{WALL_STANDARD}}': standard,
+        '{{WALL_STRENGTH_GRADE}}': str(product.get('强度等级') or 'C35'),
+        '{{WALL_PASS}}': pass_text,
+    }
+    return fill
+
+
 def build_fill_map(data, product_dir=None, product_type='isolation_bearing'):
     """
     Build a mapping from placeholder name to replacement value.
@@ -599,6 +636,8 @@ def build_fill_map(data, product_dir=None, product_type='isolation_bearing'):
 """
     if product_type == 'friction_pendulum':
         return _build_friction_fill_map(data)
+    if product_type == 'energy_dissipation_wall_damper':
+        return _build_wall_damper_fill_map(data)
     if product_type == 'embedded_damper_parts':
         return _build_embedded_damper_parts_fill_map(data)
     if _is_embedded_parts_product(
