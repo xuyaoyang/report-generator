@@ -38,6 +38,8 @@ class ReportGenerator(QMainWindow):
         self.product = None
         self.excel_data = None
         self.current_docx_path = None
+        self.current_pdf_path = None
+        self.current_output_dir = None
         self.material_manager_widget = None
         self._material_widgets = {}  # Cache: product_type → ImageManagerWidget
 
@@ -138,6 +140,12 @@ class ReportGenerator(QMainWindow):
         tb.addWidget(self.btn_pdf)
 
         tb.addSeparator()
+
+        self.btn_open_current = QPushButton('打开本次文件夹')
+        self.btn_open_current.setObjectName('btnSecondary')
+        self.btn_open_current.setEnabled(False)
+        self.btn_open_current.clicked.connect(self.on_open_current_output)
+        tb.addWidget(self.btn_open_current)
 
         self.btn_archive = QPushButton('打开归档')
         self.btn_archive.setObjectName('btnSecondary')
@@ -571,10 +579,15 @@ class ReportGenerator(QMainWindow):
                 product_type=self.product.product_type,
             )
             self.current_docx_path = path
+            self.current_pdf_path = None
+            self.current_output_dir = os.path.dirname(path)
+            self.btn_open_current.setEnabled(True)
 
             self.status_bar.showMessage(f'Word 报告已生成 — {path}')
-            QMessageBox.information(self, '生成成功',
-                                    f'报告已生成:\n{path}\n\n已自动归档到 output 目录。')
+            self._show_generated_message(
+                '生成成功',
+                f'报告已生成:\n{path}\n\n已自动归档到 output 目录。',
+                path)
         except Exception as e:
             QMessageBox.critical(self, '生成失败', str(e))
 
@@ -588,12 +601,45 @@ class ReportGenerator(QMainWindow):
         try:
             pdf_path = self.current_docx_path.replace('.docx', '.pdf')
             docx_to_pdf(self.current_docx_path, pdf_path)
+            self.current_pdf_path = pdf_path
+            self.current_output_dir = os.path.dirname(pdf_path)
+            self.btn_open_current.setEnabled(True)
             self.status_bar.showMessage(f'PDF 报告已生成 — {pdf_path}')
-            QMessageBox.information(self, 'PDF 生成成功',
-                                    f'PDF 已生成:\n{pdf_path}')
+            self._show_generated_message(
+                'PDF 生成成功',
+                f'PDF 已生成:\n{pdf_path}',
+                pdf_path)
         except Exception as e:
             QMessageBox.critical(self, 'PDF 生成失败',
                                 f'{str(e)}\n\n请确保本机已安装 Microsoft Word。')
+
+    def _show_generated_message(self, title, message, file_path):
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle(title)
+        box.setText(message)
+        open_button = box.addButton('打开所在文件夹', QMessageBox.ActionRole)
+        box.addButton('确定', QMessageBox.AcceptRole)
+        box.exec()
+        if box.clickedButton() == open_button:
+            self._open_file_folder(file_path)
+
+    def _open_file_folder(self, file_path):
+        folder = os.path.dirname(file_path)
+        if not folder:
+            raise FileNotFoundError('未找到生成文件所在目录')
+        os.makedirs(folder, exist_ok=True)
+        os.startfile(folder)
+
+    def on_open_current_output(self):
+        try:
+            if not self.current_output_dir:
+                QMessageBox.information(self, '提示', '还没有生成报告。')
+                return
+            os.makedirs(self.current_output_dir, exist_ok=True)
+            os.startfile(self.current_output_dir)
+        except Exception as e:
+            QMessageBox.warning(self, '打开失败', str(e))
 
     def on_open_archive(self):
         try:

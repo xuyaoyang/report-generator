@@ -1,0 +1,18 @@
+{
+  "3000": {
+    "plate_side": 785,
+    "plate_thickness": 10,
+    "hole_position": 620,
+    "component_diameter": 55,
+    "component_length": 250,
+    "component_multiplier": 4
+  },
+  "4050": {
+    "plate_side": 845,
+    "plate_thickness": 10,
+    "hole_position": 670,
+    "component_diameter": 60,
+    "component_length": 250,
+    "component_multiplier": 4
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "product_name": "摩擦摆支座预埋件",
+  "description": "摩擦摆支座预埋组件出厂资料",
+  "template": "template_prepared.docx",
+  "excel_template": "excel_template.xlsx",
+  "mapping": "param_mapping.json",
+  "sheets": [
+    "项目基本信息",
+    "产品型号清单"
+  ],
+  "archive_base": "output",
+  "has_mechanical_detail": false,
+  "has_per_model_visual": false,
+  "auto_match_materials": true,
+  "embedded_parts_mode": "friction_pendulum",
+  "embedded_report_title": "预埋组件出厂资料",
+  "sections": [
+    {"file": "01_cover.docx", "repeat": 1},
+    {"file": "02_toc.docx", "repeat": 1, "page_break_before": true},
+    {"file": "03_business_license.docx", "repeat": 1, "page_break_before": true},
+    {"file": "04_cert.docx", "repeat": "certificate_pages", "page_break_before": true},
+    {"file": "05_plate_report.docx", "repeat": "part_count", "page_break_before": true}
+  ],
+  "ui_config": {
+    "product_table": {
+      "headers": ["支座规格", "支座数量", "生产批号", "生产日期"],
+      "data_keys": ["支座规格", "支座数量", "生产批号", "生产日期"]
+    }
+  }
+}
