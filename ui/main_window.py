@@ -670,7 +670,7 @@ class ReportGenerator(QMainWindow):
 
         try:
             output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'output')
-            product_dir = os.path.dirname(self.product.template_path)
+            product_dir = self.product.product_dir
             material_mgr = (self.material_manager_widget.manager
                             if self.material_manager_widget else None)
             selected_ids = (self.material_manager_widget.get_checked_cert_ids()
