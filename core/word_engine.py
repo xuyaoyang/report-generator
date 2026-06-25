@@ -124,6 +124,25 @@ IBE_KEYS = {
 }
 
 
+IBE_PARAM_KEYS = {
+    'anchor_diameter': '\u951a\u7b4b\u76f4\u5f84(mm)',
+    'anchor_length': '\u951a\u7b4b\u957f\u5ea6(mm)',
+    'anchor_multiplier': '\u951a\u7b4b\u6570\u91cf\u500d\u6570',
+    'sleeve_od': '\u5957\u7b52\u5916\u5f84(mm)',
+    'sleeve_length': '\u5957\u7b52\u957f\u5ea6(mm)',
+    'plate_size': '\u94a2\u677f\u8fb9\u957f(mm)',
+    'plate_thickness': '\u94a2\u677f\u539a\u5ea6(mm)',
+    'anchor_grade': '\u94a2\u7b4b\u724c\u53f7',
+    'plate_grade': '\u94a2\u677f\u724c\u53f7',
+    'fp_plate_side': '\u9884\u57cb\u677f\u8fb9\u957f(mm)',
+    'fp_plate_thickness': '\u9884\u57cb\u677f\u539a\u5ea6(mm)',
+    'fp_hole_position': '\u87ba\u6813\u5b54\u4f4d\u7f6e(mm)',
+    'fp_component_diameter': '\u7ec4\u4ef6\u76f4\u5f84(mm)',
+    'fp_component_length': '\u7ec4\u4ef6\u957f\u5ea6(mm)',
+    'fp_component_multiplier': '\u7ec4\u4ef6\u6570\u91cf\u500d\u6570',
+}
+
+
 def _parse_isolation_bearing_diameter(model):
     match = re.search(r'(?<!\d)(1[0-6]00|[4-9]00)(?!\d)', str(model or ''))
     if not match:
@@ -149,6 +168,21 @@ def _parse_whole_number(value, field_name):
     if number < 0 or not number.is_integer():
         raise ValueError(f'{field_name}\u5fc5\u987b\u662f\u975e\u8d1f\u6574\u6570')
     return int(number)
+
+
+def _product_value(product, key, default=None):
+    value = product.get(key)
+    if value is None or str(value).strip() == '':
+        return default
+    return value
+
+
+def _product_number(product, key, default=None):
+    value = _product_value(product, key, default)
+    if value is None or str(value).strip() == '':
+        return value
+    number = float(value)
+    return int(number) if number.is_integer() else number
 
 
 def _load_embedded_parts_config(product_dir):
@@ -196,6 +230,28 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
 
         if mode == 'friction_pendulum':
             base_spec = re.sub(r'[-\uff0d][2345]$', '', model).strip()
+            plate_side = _product_number(
+                product, IBE_PARAM_KEYS['fp_plate_side'], standard['plate_side'])
+            plate_thickness = _product_number(
+                product, IBE_PARAM_KEYS['fp_plate_thickness'],
+                standard['plate_thickness'])
+            hole_position = _product_number(
+                product, IBE_PARAM_KEYS['fp_hole_position'],
+                standard['hole_position'])
+            component_diameter = _product_number(
+                product, IBE_PARAM_KEYS['fp_component_diameter'],
+                standard['component_diameter'])
+            component_length = _product_number(
+                product, IBE_PARAM_KEYS['fp_component_length'],
+                standard['component_length'])
+            component_multiplier = _parse_whole_number(
+                _product_value(
+                    product,
+                    IBE_PARAM_KEYS['fp_component_multiplier'],
+                    standard.get('component_multiplier', 4)),
+                f'{model}\u7684\u7ec4\u4ef6\u6570\u91cf\u500d\u6570')
+            plate_grade = str(_product_value(
+                product, IBE_PARAM_KEYS['plate_grade'], 'Q235B')).strip()
             for name, suffix in (
                     ('\u4e0a\u9884\u57cb\u677f', '2'),
                     ('\u4e0b\u9884\u57cb\u677f', '3')):
@@ -209,10 +265,10 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
                         'batch': batch,
                         'production_date': production_date,
                         'qty': 0,
-                        'side': standard['plate_side'],
-                        'thickness': standard['plate_thickness'],
-                        'hole_position': standard['hole_position'],
-                        'material_grade': 'Q235B',
+                        'side': plate_side,
+                        'thickness': plate_thickness,
+                        'hole_position': hole_position,
+                        'material_grade': plate_grade,
                         'manufacturer': '',
                         'material_batch': '',
                     }
@@ -232,8 +288,8 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
                         'batch': batch,
                         'production_date': production_date,
                         'qty': 0,
-                        'diameter': standard['component_diameter'],
-                        'length': standard['component_length'],
+                        'diameter': component_diameter,
+                        'length': component_length,
                         'sleeve_od': '',
                         'sleeve_length': '',
                         'material_grade': '',
@@ -242,11 +298,35 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
                     }
                     part_reports.append(anchor_groups[anchor_key])
                 anchor_groups[anchor_key]['qty'] += (
-                    qty * standard.get('component_multiplier', 4))
+                    qty * component_multiplier)
             continue
 
+        anchor_diameter = _product_number(
+            product, IBE_PARAM_KEYS['anchor_diameter'],
+            standard['anchor_diameter'])
+        anchor_length = _product_number(
+            product, IBE_PARAM_KEYS['anchor_length'],
+            standard['anchor_length'])
+        anchor_multiplier = _parse_whole_number(
+            _product_value(product, IBE_PARAM_KEYS['anchor_multiplier'],
+                           standard['multiplier']),
+            f'{model}\u7684\u951a\u7b4b\u6570\u91cf\u500d\u6570')
+        sleeve_od = _product_number(
+            product, IBE_PARAM_KEYS['sleeve_od'], standard['sleeve_od'])
+        sleeve_length = _product_number(
+            product, IBE_PARAM_KEYS['sleeve_length'], standard['sleeve_length'])
+        plate_size = _product_number(
+            product, IBE_PARAM_KEYS['plate_size'], standard['plate_size'])
+        plate_thickness = _product_number(
+            product, IBE_PARAM_KEYS['plate_thickness'],
+            standard['plate_thickness'])
+        anchor_grade = str(_product_value(
+            product, IBE_PARAM_KEYS['anchor_grade'], 'HRB400E')).strip()
+        plate_grade = str(_product_value(
+            product, IBE_PARAM_KEYS['plate_grade'], 'Q235B')).strip()
+
         anchor_spec = (
-            f'\u03c6{standard["anchor_diameter"]}\u00d7{standard["anchor_length"]}')
+            f'\u03c6{anchor_diameter}\u00d7{anchor_length}')
         anchor_key = (anchor_spec, batch, production_date)
         if anchor_key not in anchor_groups:
             anchor_groups[anchor_key] = {
@@ -255,19 +335,19 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
                 'batch': batch,
                 'production_date': production_date,
                 'qty': 0,
-                'diameter': standard['anchor_diameter'],
-                'length': standard['anchor_length'],
-                'sleeve_od': standard['sleeve_od'],
-                'sleeve_length': standard['sleeve_length'],
-                'material_grade': 'HRB400E',
+                'diameter': anchor_diameter,
+                'length': anchor_length,
+                'sleeve_od': sleeve_od,
+                'sleeve_length': sleeve_length,
+                'material_grade': anchor_grade,
                 'manufacturer': '',
                 'material_batch': '',
             }
-        anchor_groups[anchor_key]['qty'] += qty * standard['multiplier']
+        anchor_groups[anchor_key]['qty'] += qty * anchor_multiplier
 
         plate_spec = (
-            f'{standard["plate_size"]}\u00d7{standard["plate_size"]}'
-            f'\u00d7{standard["plate_thickness"]}')
+            f'{plate_size}\u00d7{plate_size}'
+            f'\u00d7{plate_thickness}')
         plate_key = (plate_spec, batch, production_date)
         if plate_key not in plate_groups:
             plate_groups[plate_key] = {
@@ -276,9 +356,9 @@ def _prepare_isolation_embedded_data(data, product_dir, material_manager=None):
                 'batch': batch,
                 'production_date': production_date,
                 'qty': 0,
-                'side': standard['plate_size'],
-                'thickness': standard['plate_thickness'],
-                'material_grade': 'Q235B',
+                'side': plate_size,
+                'thickness': plate_thickness,
+                'material_grade': plate_grade,
                 'manufacturer': '',
                 'material_batch': '',
             }

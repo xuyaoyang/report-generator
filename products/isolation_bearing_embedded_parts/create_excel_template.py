@@ -39,11 +39,14 @@ def create(output_path):
         [42, 34, 42, 18, 18, 14, 14, 14])
     _write_sheet(
         workbook, '\u4ea7\u54c1\u578b\u53f7\u6e05\u5355',
-        ['\u652f\u5ea7\u89c4\u683c', '\u652f\u5ea7\u6570\u91cf', '\u751f\u4ea7\u6279\u53f7', '\u751f\u4ea7\u65e5\u671f'],
-        [['LNR500-II', 13, '202605', '2026\u5e745\u6708'],
-         ['LNR700-II', 22, '202605', '2026\u5e745\u6708'],
-         ['LNR900-II', 3, '202605', '2026\u5e745\u6708']],
-        [22, 16, 18, 18])
+        ['\u652f\u5ea7\u89c4\u683c', '\u652f\u5ea7\u6570\u91cf', '\u751f\u4ea7\u6279\u53f7', '\u751f\u4ea7\u65e5\u671f',
+         '\u951a\u7b4b\u76f4\u5f84(mm)', '\u951a\u7b4b\u957f\u5ea6(mm)', '\u951a\u7b4b\u6570\u91cf\u500d\u6570',
+         '\u5957\u7b52\u5916\u5f84(mm)', '\u5957\u7b52\u957f\u5ea6(mm)', '\u94a2\u677f\u8fb9\u957f(mm)',
+         '\u94a2\u677f\u539a\u5ea6(mm)', '\u94a2\u7b4b\u724c\u53f7', '\u94a2\u677f\u724c\u53f7'],
+        [['LNR500-II', 13, '202605', '2026\u5e745\u6708', '', '', '', '', '', '', '', '', ''],
+         ['LNR700-II', 22, '202605', '2026\u5e745\u6708', '', '', '', '', '', '', '', '', ''],
+         ['LNR900-II', 3, '202605', '2026\u5e745\u6708', '', '', '', '', '', '', '', '', '']],
+        [22, 16, 18, 18, 16, 16, 16, 16, 16, 16, 16, 16, 16])
     notes = workbook.create_sheet('\u586b\u5199\u8bf4\u660e')
     lines = [
         '\u586b\u5199\u8bf4\u660e',
@@ -51,6 +54,7 @@ def create(output_path):
         '2. \u652f\u5ea7\u89c4\u683c\u4e2d\u9700\u5305\u542b400~1600\u7684\u516c\u79f0\u76f4\u5f84\uff0c\u4f8b\u5982LNR700-II\u3002',
         '3. \u6bcf\u5957\u652f\u5ea7\u63091\u4ef6\u9884\u57cb\u94a2\u677f\u8ba1\u7b97\uff0c\u951a\u7b4b\u6309\u6807\u51c6\u8868\u768416/24/32/40\u500d\u8ba1\u7b97\u3002',
         '4. \u6750\u8d28\u5355\u6839\u636e\u94a2\u7b4b\u76f4\u5f84\u6216\u94a2\u677f\u539a\u5ea6\u3001\u6750\u8d28\u724c\u53f7\u81ea\u52a8\u5339\u914d\u6700\u65b0\u6709\u6548\u8bc1\u4e66\u3002',
+        '5. \u951a\u7b4b\u76f4\u5f84/\u957f\u5ea6\u3001\u5957\u7b52\u5c3a\u5bf8\u3001\u94a2\u677f\u8fb9\u957f/\u539a\u5ea6\u7b49\u53c2\u6570\u53ef\u76f4\u63a5\u586b\u5199\uff1b\u7559\u7a7a\u5219\u6309\u6807\u51c6\u8868\u81ea\u52a8\u5e26\u51fa\u3002',
     ]
     for row, line in enumerate(lines, 1):
         notes.cell(row, 1, line)
