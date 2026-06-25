@@ -148,6 +148,51 @@ def _make_page_break_para():
     return p
 
 
+def _set_keep_next(p_elem):
+    p_pr = p_elem.find(qn('w:pPr'))
+    if p_pr is None:
+        p_pr = OxmlElement('w:pPr')
+        p_elem.insert(0, p_pr)
+    if p_pr.find(qn('w:keepNext')) is None:
+        p_pr.append(OxmlElement('w:keepNext'))
+
+
+def _set_cant_split(tr_elem):
+    tr_pr = tr_elem.find(qn('w:trPr'))
+    if tr_pr is None:
+        tr_pr = OxmlElement('w:trPr')
+        tr_elem.insert(0, tr_pr)
+    if tr_pr.find(qn('w:cantSplit')) is None:
+        tr_pr.append(OxmlElement('w:cantSplit'))
+
+
+def _keep_certificate_title_with_table(doc):
+    """Keep certificate logo/title paragraphs on the same page as the table."""
+    body_children = list(doc.element.body)
+    for index, child in enumerate(body_children):
+        tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
+        if tag != 'p':
+            continue
+        text = ''.join(t.text or '' for t in child.iter(qn('w:t'))).strip()
+        if text != '合格证':
+            continue
+
+        _set_keep_next(child)
+        for next_child in body_children[index + 1:index + 5]:
+            next_tag = (
+                next_child.tag.split('}')[-1]
+                if '}' in next_child.tag else next_child.tag
+            )
+            if next_tag == 'p':
+                _set_keep_next(next_child)
+                continue
+            if next_tag == 'tbl':
+                for row in next_child.findall(qn('w:tr')):
+                    _set_cant_split(row)
+                break
+            break
+
+
 def _set_page_break_before_first_content(doc):
     """Start a section on a new page without an overflow-prone break paragraph."""
     body = doc.element.body
@@ -312,6 +357,7 @@ def compose_report(section_specs, output_path, excel_data,
     _absorb_empty_pb_paras(result)
 
     _fix_orientations(result, specs)
+    _keep_certificate_title_with_table(result)
     _direct_fill_embedded_cert(result, excel_data)
     _direct_fill_mech_detail(result, excel_data)
     _direct_fill_visual(result, excel_data)
