@@ -13,6 +13,7 @@ from decimal import Decimal, InvalidOperation
 from datetime import datetime
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from core.app_paths import material_lib_dir, user_material_categories_path, bundled_path
 
 
 class MaterialManager:
@@ -23,10 +24,13 @@ class MaterialManager:
             os.path.abspath(__file__)))
         self.product_dir = product_dir
         self.product_type = product_type
-        self.image_lib_dir = os.path.join(self.project_root, 'image_lib')
+        self.image_lib_dir = material_lib_dir()
 
-        config_path = os.path.join(self.project_root, 'config',
-                                    'material_categories.json')
+        config_path = user_material_categories_path()
+        if not os.path.exists(config_path):
+            bundled_config = bundled_path('config', 'material_categories.json')
+            os.makedirs(os.path.dirname(config_path), exist_ok=True)
+            shutil.copy2(bundled_config, config_path)
         with open(config_path, 'r', encoding='utf-8') as f:
             self.category_config = json.load(f)
         self.categories = self.category_config['categories']

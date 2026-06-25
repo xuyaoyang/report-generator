@@ -5,6 +5,7 @@ Each product type (隔震支座, 预埋件, 黏滞阻尼器, etc.) provides its 
 from abc import ABC, abstractmethod
 import os
 import json
+from core.app_paths import excel_templates_dir
 
 
 class BaseProduct(ABC):
@@ -33,6 +34,10 @@ class BaseProduct(ABC):
 
     @property
     def excel_template_path(self):
+        user_template = os.path.join(
+            excel_templates_dir(), f'{self.product_name}参数模板.xlsx')
+        if os.path.exists(user_template):
+            return user_template
         rel = self.config.get('excel_template', 'excel_template.xlsx')
         return os.path.join(self.product_dir, rel)
 

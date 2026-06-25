@@ -1,5 +1,6 @@
 """Read and parse the Excel parameter template."""
 import os
+import tempfile
 from openpyxl import load_workbook
 
 
@@ -17,7 +18,14 @@ def read_excel_data(excel_path):
     if not os.path.exists(excel_path):
         raise FileNotFoundError(f'Excel file not found: {excel_path}')
 
-    wb = load_workbook(excel_path, data_only=True)
+    recalculated_copy = None
+    load_path = excel_path
+    if _has_formulas(excel_path):
+        recalculated_copy = _make_recalculated_copy(excel_path)
+        if recalculated_copy:
+            load_path = recalculated_copy
+
+    wb = load_workbook(load_path, data_only=True)
 
     result = {}
 
@@ -69,11 +77,78 @@ def read_excel_data(excel_path):
         result['material_requirements'] = material_reqs
 
     wb.close()
+    if recalculated_copy:
+        try:
+            os.remove(recalculated_copy)
+        except OSError:
+            pass
 
     # Validate
     _validate_data(result)
 
     return result
+
+
+def _has_formulas(excel_path):
+    try:
+        wb = load_workbook(excel_path, data_only=False, read_only=True)
+        for ws in wb.worksheets:
+            for row in ws.iter_rows():
+                if any(cell.data_type == 'f' for cell in row):
+                    wb.close()
+                    return True
+        wb.close()
+    except Exception:
+        return False
+    return False
+
+
+def _make_recalculated_copy(excel_path):
+    """Use local Excel to calculate formulas into a temporary copy.
+
+    openpyxl reads cached formula results but does not calculate formulas.
+    This keeps the user's original workbook untouched.
+    """
+    try:
+        import pythoncom
+        import win32com.client
+    except Exception:
+        return None
+
+    tmp = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False)
+    tmp_path = tmp.name
+    tmp.close()
+
+    excel = None
+    workbook = None
+    try:
+        pythoncom.CoInitialize()
+        excel = win32com.client.DispatchEx('Excel.Application')
+        excel.Visible = False
+        excel.DisplayAlerts = False
+        workbook = excel.Workbooks.Open(
+            os.path.abspath(excel_path),
+            UpdateLinks=0,
+            ReadOnly=True,
+        )
+        excel.CalculateFullRebuild()
+        workbook.SaveCopyAs(tmp_path)
+        return tmp_path
+    except Exception:
+        try:
+            os.remove(tmp_path)
+        except OSError:
+            pass
+        return None
+    finally:
+        if workbook is not None:
+            workbook.Close(False)
+        if excel is not None:
+            excel.Quit()
+        try:
+            pythoncom.CoUninitialize()
+        except Exception:
+            pass
 
 
 def _validate_data(data):

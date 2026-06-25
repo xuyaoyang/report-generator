@@ -6,3 +6,4 @@ pywin32
 Pillow
 PyMuPDF
 pdf2image
+PyInstaller

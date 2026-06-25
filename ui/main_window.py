@@ -22,6 +22,8 @@ from core.excel_reader import read_excel_data
 from core.word_engine import generate_report
 from core.pdf_converter import docx_to_pdf
 from core.archiver import open_archive_dir
+from core.app_paths import (
+    excel_templates_dir, load_settings, output_dir, save_settings, settings_path)
 from products.base_product import load_product, list_products
 from ui.image_manager import ImageManagerWidget
 
@@ -151,6 +153,11 @@ class ReportGenerator(QMainWindow):
         self.btn_open_current.setEnabled(False)
         self.btn_open_current.clicked.connect(self.on_open_current_output)
         tb.addWidget(self.btn_open_current)
+
+        self.btn_select_output = QPushButton('选择导出目录')
+        self.btn_select_output.setObjectName('btnSecondary')
+        self.btn_select_output.clicked.connect(self.on_select_output_dir)
+        tb.addWidget(self.btn_select_output)
 
         self.btn_archive = QPushButton('打开归档')
         self.btn_archive.setObjectName('btnSecondary')
@@ -362,24 +369,13 @@ class ReportGenerator(QMainWindow):
                 self.setStyleSheet(f.read())
 
     def _settings_path(self):
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        return os.path.join(project_root, 'config', 'settings.json')
+        return settings_path()
 
     def _load_settings(self):
-        path = self._settings_path()
-        if not os.path.exists(path):
-            return {}
-        try:
-            with open(path, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except (OSError, json.JSONDecodeError):
-            return {}
+        return load_settings()
 
     def _save_settings(self, settings):
-        path = self._settings_path()
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(settings, f, ensure_ascii=False, indent=2)
+        save_settings(settings)
 
     def _load_products(self):
         try:
@@ -509,7 +505,7 @@ class ReportGenerator(QMainWindow):
     def on_import_excel(self):
         file_path, _ = QFileDialog.getOpenFileName(
             self, '选择 Excel 参数文件',
-            os.path.dirname(self.product.excel_template_path) if self.product else '',
+            excel_templates_dir() if self.product else '',
             'Excel 文件 (*.xlsx)'
         )
         if not file_path:
@@ -669,7 +665,7 @@ class ReportGenerator(QMainWindow):
             return
 
         try:
-            output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'output')
+            output_dir_path = output_dir()
             product_dir = self.product.product_dir
             material_mgr = (self.material_manager_widget.manager
                             if self.material_manager_widget else None)
@@ -678,7 +674,7 @@ class ReportGenerator(QMainWindow):
             path = generate_report(
                 self.product.template_path,
                 data,
-                output_dir,
+                output_dir_path,
                 f'{self.product.product_name}出厂检验报告',
                 product_dir,
                 material_manager=material_mgr,
@@ -693,7 +689,7 @@ class ReportGenerator(QMainWindow):
             self.status_bar.showMessage(f'Word 报告已生成 — {path}')
             self._show_generated_message(
                 '生成成功',
-                f'报告已生成:\n{path}\n\n已自动归档到 output 目录。',
+                f'报告已生成:\n{path}',
                 path)
         except Exception as e:
             QMessageBox.critical(self, '生成失败', str(e))
@@ -750,10 +746,19 @@ class ReportGenerator(QMainWindow):
 
     def on_open_archive(self):
         try:
-            output_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'output')
-            open_archive_dir(output_dir)
+            open_archive_dir(output_dir())
         except Exception as e:
             QMessageBox.warning(self, '打开失败', str(e))
+
+    def on_select_output_dir(self):
+        settings = self._load_settings()
+        current = settings.get('output_dir') or output_dir()
+        folder = QFileDialog.getExistingDirectory(self, '选择报告导出目录', current)
+        if not folder:
+            return
+        settings['output_dir'] = folder
+        self._save_settings(settings)
+        self.status_bar.showMessage(f'报告导出目录已设置为: {folder}')
 
 
 def main():
