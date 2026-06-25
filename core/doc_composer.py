@@ -15,23 +15,47 @@ def _count_fields(doc):
         for r in t.rows:
             for c in r.cells:
                 text += c.text + '\n'
-    return len(re.findall(r'\{\{FIELD_\d{3}\}\}', text))
+    return len(re.findall(r'\{\{[^}]+\}\}', text))
+
+
+def _replace_text_nodes(root, fill_map):
+    """Replace placeholders even when Word splits them across runs."""
+    if not fill_map:
+        return
+
+    for ph, val in fill_map.items():
+        replacement = str(val)
+        while True:
+            text_nodes = [node for node in root.iter(qn('w:t')) if node.text is not None]
+            full_text = ''.join(node.text or '' for node in text_nodes)
+            start = full_text.find(ph)
+            if start < 0:
+                break
+            end = start + len(ph)
+
+            offsets = [0]
+            for node in text_nodes:
+                offsets.append(offsets[-1] + len(node.text or ''))
+
+            placed = False
+            for idx, node in enumerate(text_nodes):
+                node_start = offsets[idx]
+                node_end = offsets[idx + 1]
+                if node_end <= start or node_start >= end:
+                    continue
+
+                text = node.text or ''
+                prefix = text[:max(0, start - node_start)]
+                suffix = text[max(0, end - node_start):]
+                if not placed:
+                    node.text = prefix + replacement + suffix
+                    placed = True
+                else:
+                    node.text = prefix + suffix
 
 
 def _replace_all(doc, fill_map):
-    for para in doc.paragraphs:
-        for run in para.runs:
-            for ph, val in fill_map.items():
-                if ph in (run.text or ''):
-                    run.text = run.text.replace(ph, val)
-    for table in doc.tables:
-        for row in table.rows:
-            for cell in row.cells:
-                for para in cell.paragraphs:
-                    for run in para.runs:
-                        for ph, val in fill_map.items():
-                            if ph in (run.text or ''):
-                                run.text = run.text.replace(ph, val)
+    _replace_text_nodes(doc.element.body, fill_map)
 
 
 def _clone_body_content(doc, times):
@@ -72,7 +96,8 @@ def _replace_inline_pictures(doc, image_paths):
 
 
 def process_section(template_path, fill_map, repeat=1, fill_maps=None,
-                   between_pages=False, batch_counts=None, image_paths=None):
+                   between_pages=False, batch_counts=None, image_paths=None,
+                   page_break_every=0):
     doc = Document(template_path)
 
     if repeat > 1:
@@ -87,19 +112,16 @@ def process_section(template_path, fill_map, repeat=1, fill_maps=None,
                 fm = fill_maps[i]
                 for j in range(start, min(end, len(all_children))):
                     child = all_children[j]
-                    for t_elem in child.iter(qn('w:t')):
-                        if not t_elem.text:
-                            continue
-                        for ph, val in fm.items():
-                            if ph in t_elem.text:
-                                t_elem.text = t_elem.text.replace(ph, val)
+                    _replace_text_nodes(child, fm)
         else:
             _replace_all(doc, fill_map)
 
-        if between_pages and repeat > 1:
+        if (between_pages or page_break_every) and repeat > 1:
             all_children = list(doc.element.body)
             group_size = len(all_children) // repeat
             for g in range(1, repeat):
+                if page_break_every and g % page_break_every != 0:
+                    continue
                 insert_before = all_children[g * group_size]
                 pb_para = _make_page_break_para()
                 insert_before.addprevious(pb_para)
@@ -261,7 +283,7 @@ def compose_report(section_specs, output_path, excel_data,
         first['template'], first.get('fill_map', {}),
         first.get('repeat', 1), first.get('fill_maps'),
         first.get('page_break_after', False), first.get('batch_counts'),
-        first.get('image_paths'))
+        first.get('image_paths'), first.get('page_break_every', 0))
 
     composer = Composer(master)
 
@@ -271,7 +293,7 @@ def compose_report(section_specs, output_path, excel_data,
             spec['template'], spec.get('fill_map', {}),
             spec.get('repeat', 1), spec.get('fill_maps'),
             spec.get('page_break_after', False), spec.get('batch_counts'),
-            spec.get('image_paths'))
+            spec.get('image_paths'), spec.get('page_break_every', 0))
 
         if previous_spec.get('page_break_after', False) or spec.get('page_break_before', True):
             if spec.get('stable_page_break_before', False):

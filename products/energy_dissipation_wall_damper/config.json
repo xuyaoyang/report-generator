@@ -31,18 +31,15 @@
       "file": "04_cert.docx",
       "repeat": "model_count",
       "per_model": true,
-      "page_break_before": true
+      "page_break_before": true,
+      "page_break_every": 2
     },
     {
       "file": "05_inspection_report.docx",
       "repeat": "model_count",
       "per_model": true,
-      "page_break_before": true
-    },
-    {
-      "file": "06_material_title.docx",
-      "repeat": 1,
-      "page_break_before": true
+      "page_break_before": true,
+      "page_break_after": true
     }
   ],
   "ui_config": {
