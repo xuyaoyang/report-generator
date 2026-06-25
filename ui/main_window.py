@@ -30,6 +30,11 @@ YES_TEXT = '\u662f'
 NO_TEXT = '\u5426'
 ED_TYPE_FIELD = '\u9884\u57cb\u4ef6\u7c7b\u578b'
 ED_TYPE_DEFAULT = '\u7c98\u6ede\u963b\u5c3c\u5668'
+EMBEDDED_PARAM_PRODUCTS = {
+    'isolation_bearing_embedded_parts',
+    'friction_pendulum_embedded_parts',
+}
+EMBEDDED_MAIN_COLUMN_COUNT = 4
 
 
 class ReportGenerator(QMainWindow):
@@ -233,6 +238,7 @@ class ReportGenerator(QMainWindow):
         self.product_table.setAlternatingRowColors(True)
         self.product_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.product_table.setMinimumHeight(200)
+        self.product_table.itemChanged.connect(self._sync_embedded_param_row_label)
         layout.addWidget(self.product_table)
 
         parent_layout.addWidget(group)
@@ -276,9 +282,78 @@ class ReportGenerator(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(0, 0, 0, 0)
+
+        splitter = QSplitter(Qt.Horizontal)
+        splitter.setHandleWidth(8)
+
+        self.embedded_params_group = QGroupBox('预埋件参数调整')
+        param_layout = QVBoxLayout(self.embedded_params_group)
+        param_layout.setContentsMargins(10, 12, 10, 10)
+        param_layout.setSpacing(8)
+
+        hint = QLabel('导入 Excel 后，可在这里按行调整预埋件参数；留空则按内置标准参数自动生成。')
+        hint.setWordWrap(True)
+        hint.setObjectName('hintLabel')
+        param_layout.addWidget(hint)
+
+        self.embedded_params_table = QTableWidget()
+        self.embedded_params_table.setAlternatingRowColors(True)
+        self.embedded_params_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.embedded_params_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.Interactive)
+        self.embedded_params_table.horizontalHeader().setStretchLastSection(True)
+        self.embedded_params_table.setMinimumWidth(360)
+        param_layout.addWidget(self.embedded_params_table)
+
+        self.embedded_params_group.setVisible(False)
+        splitter.addWidget(self.embedded_params_group)
+
+        self.image_manager_container = QWidget()
+        self.image_tab_layout = QVBoxLayout(self.image_manager_container)
+        self.image_tab_layout.setContentsMargins(0, 0, 0, 0)
+        splitter.addWidget(self.image_manager_container)
+        splitter.setStretchFactor(0, 0)
+        splitter.setStretchFactor(1, 1)
+
+        layout.addWidget(splitter)
         self.image_tab_container = widget
-        self.image_tab_layout = layout
         self.tabs.addTab(widget, '材质单图片')
+
+    def _is_embedded_param_product(self):
+        return bool(self.product and self.product.product_type in EMBEDDED_PARAM_PRODUCTS)
+
+    def _product_table_fields(self):
+        ui = self.product.config.get('ui_config', {}) if self.product else {}
+        pt = ui.get('product_table', {})
+        headers = pt.get('headers', ['产品型号', '支座编号范围', '数量', '生产日期', '检验标准'])
+        keys = pt.get('data_keys', ['产品型号', '支座编号范围', '数量', '生产日期', '检验标准'])
+
+        if self._is_embedded_param_product() and len(keys) > EMBEDDED_MAIN_COLUMN_COUNT:
+            return {
+                'main_headers': headers[:EMBEDDED_MAIN_COLUMN_COUNT],
+                'main_keys': keys[:EMBEDDED_MAIN_COLUMN_COUNT],
+                'param_headers': headers[EMBEDDED_MAIN_COLUMN_COUNT:],
+                'param_keys': keys[EMBEDDED_MAIN_COLUMN_COUNT:],
+            }
+
+        return {
+            'main_headers': headers,
+            'main_keys': keys,
+            'param_headers': [],
+            'param_keys': [],
+        }
+
+    def _sync_embedded_param_row_label(self, item):
+        if item.column() != 0 or not self._is_embedded_param_product():
+            return
+        if item.row() >= self.embedded_params_table.rowCount():
+            return
+        model_item = self.embedded_params_table.item(item.row(), 0)
+        if model_item is None:
+            model_item = QTableWidgetItem()
+            model_item.setFlags(model_item.flags() & ~Qt.ItemIsEditable)
+            self.embedded_params_table.setItem(item.row(), 0, model_item)
+        model_item.setText(item.text())
 
     def _apply_theme(self):
         qss_path = os.path.join(os.path.dirname(__file__), 'resources', 'style.qss')
@@ -367,13 +442,26 @@ class ReportGenerator(QMainWindow):
             return
 
         # Product table
-        pt = ui.get('product_table', {})
-        if pt.get('headers'):
-            self.product_table.setColumnCount(len(pt['headers']))
-            self.product_table.setHorizontalHeaderLabels(pt['headers'])
+        fields = self._product_table_fields()
+        if fields['main_headers']:
+            self.product_table.setColumnCount(len(fields['main_headers']))
+            self.product_table.setHorizontalHeaderLabels(fields['main_headers'])
             self.product_table.horizontalHeader().setSectionResizeMode(
                 QHeaderView.Interactive)
             self.product_table.horizontalHeader().setStretchLastSection(True)
+
+        if fields['param_headers']:
+            self.embedded_params_group.setVisible(True)
+            self.embedded_params_table.setColumnCount(len(fields['param_headers']) + 1)
+            self.embedded_params_table.setHorizontalHeaderLabels(
+                ['对应规格'] + fields['param_headers'])
+            self.embedded_params_table.horizontalHeader().setSectionResizeMode(
+                QHeaderView.Interactive)
+            self.embedded_params_table.horizontalHeader().setStretchLastSection(True)
+        else:
+            self.embedded_params_group.setVisible(False)
+            self.embedded_params_table.setRowCount(0)
+            self.embedded_params_table.setColumnCount(0)
 
         # Mechanical tab
         mt = ui.get('mechanical_tab', {})
@@ -448,12 +536,26 @@ class ReportGenerator(QMainWindow):
         # Product list
         products = data.get('product_list', [])
         self.product_table.setRowCount(len(products))
-        pt_keys = ui.get('product_table', {}).get('data_keys',
-            ['产品型号', '支座编号范围', '数量', '生产日期', '检验标准'])
+        fields = self._product_table_fields()
+        pt_keys = fields['main_keys']
         for r, p in enumerate(products):
             for c, k in enumerate(pt_keys):
                 val = p.get(k, '')
                 self.product_table.setItem(r, c, QTableWidgetItem(str(val) if val else ''))
+
+        param_keys = fields['param_keys']
+        self.embedded_params_table.setRowCount(len(products) if param_keys else 0)
+        for r, p in enumerate(products):
+            if not param_keys:
+                break
+            model_text = str(p.get(pt_keys[0], '')) if pt_keys else str(r + 1)
+            model_item = QTableWidgetItem(model_text)
+            model_item.setFlags(model_item.flags() & ~Qt.ItemIsEditable)
+            self.embedded_params_table.setItem(r, 0, model_item)
+            for c, k in enumerate(param_keys, start=1):
+                val = p.get(k, '')
+                self.embedded_params_table.setItem(
+                    r, c, QTableWidgetItem(str(val) if val else ''))
 
         # Mechanical data
         mech_data = data.get('mechanical_data', [])
@@ -482,11 +584,12 @@ class ReportGenerator(QMainWindow):
                                          QTableWidgetItem(str(v.get(k, '合格'))))
 
         # Auto-size columns to content, then stretch last column
-        for table in [self.product_table, self.mech_table, self.visual_table]:
+        for table in [self.product_table, self.embedded_params_table,
+                      self.mech_table, self.visual_table]:
             table.resizeColumnsToContents()
             header = table.horizontalHeader()
             # Ensure minimum reasonable width for first column (model name)
-            if header.sectionSize(0) < 100:
+            if table.columnCount() and header.sectionSize(0) < 100:
                 header.resizeSection(0, 100)
 
     def _collect_ui_data(self):
@@ -505,13 +608,17 @@ class ReportGenerator(QMainWindow):
             self.excel_data['project_info'][label] = self._get_project_field_value(edit)
 
         # Update product list
-        pt_keys = ui.get('product_table', {}).get('data_keys',
-            ['产品型号', '支座编号范围', '数量', '生产日期', '检验标准'])
+        fields = self._product_table_fields()
+        pt_keys = fields['main_keys']
+        param_keys = fields['param_keys']
         products = []
         for r in range(self.product_table.rowCount()):
             p = {}
             for c, h in enumerate(pt_keys):
                 item = self.product_table.item(r, c)
+                p[h] = item.text() if item else ''
+            for c, h in enumerate(param_keys, start=1):
+                item = self.embedded_params_table.item(r, c)
                 p[h] = item.text() if item else ''
             if p.get(pt_keys[0]):
                 products.append(p)

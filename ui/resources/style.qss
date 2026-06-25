@@ -122,6 +122,14 @@ QLabel {
     color: #333333;
 }
 
+QLabel#hintLabel {
+    color: #667085;
+    background-color: #F3F8FF;
+    border: 1px solid #D6E9FF;
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
 QStatusBar {
     background-color: #FFFFFF;
     border-top: 1px solid #E0E0E0;
