@@ -14,6 +14,10 @@ dist/
 
 # Generated report outputs and verification renders
 output/
+报告输出/
+Excel模板/
+材质单库/
+material_categories.json
 debug_curve_images/
 _render_v21_tail/
 debug_*_render*/

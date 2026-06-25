@@ -6,17 +6,23 @@ import sys
 
 
 APP_DIR_NAME = '融海报告生成'
-WORK_DIR_NAME = '报告生成工作目录'
 EXCEL_TEMPLATE_DIR_NAME = 'Excel模板'
 MATERIAL_LIB_DIR_NAME = '材质单库'
 OUTPUT_DIR_NAME = '报告输出'
 
 
 def app_root():
-    """Return bundled app root in frozen mode, otherwise project root."""
+    """Return install/app directory in frozen mode, otherwise project root."""
     if getattr(sys, 'frozen', False):
         return os.path.dirname(sys.executable)
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def resource_root():
+    """Return bundled read-only resource root."""
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        return sys._MEIPASS
+    return app_root()
 
 
 def user_config_dir():
@@ -29,10 +35,7 @@ def settings_path():
 
 
 def default_work_dir():
-    documents = os.path.join(os.path.expanduser('~'), 'Documents')
-    if not os.path.isdir(documents):
-        documents = os.path.expanduser('~')
-    return os.path.join(documents, WORK_DIR_NAME)
+    return app_root()
 
 
 def load_settings():
@@ -53,7 +56,7 @@ def save_settings(settings):
 
 
 def work_dir():
-    return load_settings().get('work_dir') or default_work_dir()
+    return default_work_dir()
 
 
 def excel_templates_dir():
@@ -65,7 +68,11 @@ def material_lib_dir():
 
 
 def output_dir():
-    return load_settings().get('output_dir') or os.path.join(work_dir(), OUTPUT_DIR_NAME)
+    settings = load_settings()
+    configured = settings.get('output_dir')
+    if configured and os.path.isabs(configured):
+        return configured
+    return os.path.join(work_dir(), OUTPUT_DIR_NAME)
 
 
 def user_material_categories_path():
@@ -73,7 +80,7 @@ def user_material_categories_path():
 
 
 def bundled_path(*parts):
-    return os.path.join(app_root(), *parts)
+    return os.path.join(resource_root(), *parts)
 
 
 def _copytree_missing(src, dst):
@@ -105,16 +112,18 @@ def _product_template_name(product_dir, fallback_name):
 
 
 def initialize_workspace():
-    """Create first-run user workspace without overwriting existing data."""
+    """Create first-run install-dir workspace without overwriting data."""
     settings = load_settings()
-    if not settings.get('work_dir'):
-        settings['work_dir'] = default_work_dir()
-    if not settings.get('output_dir'):
-        settings['output_dir'] = os.path.join(settings['work_dir'], OUTPUT_DIR_NAME)
+    settings.pop('work_dir', None)
+    configured_output = settings.get('output_dir')
+    if configured_output and not os.path.isabs(configured_output):
+        settings.pop('output_dir', None)
+    elif configured_output and '报告生成工作目录' in configured_output:
+        settings.pop('output_dir', None)
     save_settings(settings)
 
-    os.makedirs(settings['work_dir'], exist_ok=True)
-    os.makedirs(settings['output_dir'], exist_ok=True)
+    os.makedirs(work_dir(), exist_ok=True)
+    os.makedirs(output_dir(), exist_ok=True)
     os.makedirs(excel_templates_dir(), exist_ok=True)
 
     _copytree_missing(bundled_path('image_lib'), material_lib_dir())
