@@ -15,16 +15,59 @@
   "embedded_parts_mode": "friction_pendulum",
   "embedded_report_title": "预埋组件出厂资料",
   "sections": [
-    {"file": "01_cover.docx", "repeat": 1},
-    {"file": "02_toc.docx", "repeat": 1, "page_break_before": true},
-    {"file": "03_business_license.docx", "repeat": 1, "page_break_before": true},
-    {"file": "04_cert.docx", "repeat": "certificate_pages", "page_break_before": true},
-    {"file": "05_plate_report.docx", "repeat": "part_count", "page_break_before": true}
+    {
+      "file": "01_cover.docx",
+      "repeat": 1
+    },
+    {
+      "file": "02_toc.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "03_business_license.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "04_cert.docx",
+      "repeat": "certificate_pages",
+      "page_break_before": true
+    },
+    {
+      "file": "05_plate_report.docx",
+      "repeat": "part_count",
+      "page_break_before": true
+    }
   ],
   "ui_config": {
     "product_table": {
-      "headers": ["支座规格", "支座数量", "生产批号", "生产日期"],
-      "data_keys": ["支座规格", "支座数量", "生产批号", "生产日期"]
+      "headers": [
+        "支座规格",
+        "支座数量",
+        "生产批号",
+        "生产日期",
+        "预埋板边长(mm)",
+        "预埋板厚度(mm)",
+        "螺栓孔位置(mm)",
+        "组件直径(mm)",
+        "组件长度(mm)",
+        "组件数量倍数",
+        "钢板牌号"
+      ],
+      "data_keys": [
+        "支座规格",
+        "支座数量",
+        "生产批号",
+        "生产日期",
+        "预埋板边长(mm)",
+        "预埋板厚度(mm)",
+        "螺栓孔位置(mm)",
+        "组件直径(mm)",
+        "组件长度(mm)",
+        "组件数量倍数",
+        "钢板牌号"
+      ]
     }
   }
 }

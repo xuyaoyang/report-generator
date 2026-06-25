@@ -13,17 +13,68 @@
   "has_per_model_visual": false,
   "auto_match_materials": true,
   "sections": [
-    {"file": "01_cover.docx", "repeat": 1},
-    {"file": "02_toc.docx", "repeat": 1, "page_break_before": true},
-    {"file": "03_business_license.docx", "repeat": 1, "page_break_before": true},
-    {"file": "04_cert.docx", "repeat": "certificate_pages", "page_break_before": true},
-    {"file": "05_anchor_report.docx", "repeat": "anchor_count", "page_break_before": true},
-    {"file": "06_plate_report.docx", "repeat": "plate_count", "page_break_before": true}
+    {
+      "file": "01_cover.docx",
+      "repeat": 1
+    },
+    {
+      "file": "02_toc.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "03_business_license.docx",
+      "repeat": 1,
+      "page_break_before": true
+    },
+    {
+      "file": "04_cert.docx",
+      "repeat": "certificate_pages",
+      "page_break_before": true
+    },
+    {
+      "file": "05_anchor_report.docx",
+      "repeat": "anchor_count",
+      "page_break_before": true
+    },
+    {
+      "file": "06_plate_report.docx",
+      "repeat": "plate_count",
+      "page_break_before": true
+    }
   ],
   "ui_config": {
     "product_table": {
-      "headers": ["支座规格", "支座数量", "生产批号", "生产日期"],
-      "data_keys": ["支座规格", "支座数量", "生产批号", "生产日期"]
+      "headers": [
+        "支座规格",
+        "支座数量",
+        "生产批号",
+        "生产日期",
+        "锚筋直径(mm)",
+        "锚筋长度(mm)",
+        "锚筋数量倍数",
+        "套筒外径(mm)",
+        "套筒长度(mm)",
+        "钢板边长(mm)",
+        "钢板厚度(mm)",
+        "钢筋牌号",
+        "钢板牌号"
+      ],
+      "data_keys": [
+        "支座规格",
+        "支座数量",
+        "生产批号",
+        "生产日期",
+        "锚筋直径(mm)",
+        "锚筋长度(mm)",
+        "锚筋数量倍数",
+        "套筒外径(mm)",
+        "套筒长度(mm)",
+        "钢板边长(mm)",
+        "钢板厚度(mm)",
+        "钢筋牌号",
+        "钢板牌号"
+      ]
     }
   }
 }
