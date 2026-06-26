@@ -14,6 +14,9 @@ from datetime import datetime
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from core.app_paths import material_lib_dir, user_material_categories_path, bundled_path
+from core.path_utils import (
+    ensure_inside_base, sanitize_filename_stem, sanitize_path_component,
+)
 
 
 class MaterialManager:
@@ -53,8 +56,23 @@ class MaterialManager:
         self.category_config['categories'] = self.categories
         with open(self._config_path, 'w', encoding='utf-8') as f:
             json.dump(self.category_config, f, ensure_ascii=False, indent=2)
-        category_dir = os.path.join(self.image_lib_dir, key)
+        category_dir = self._category_dir(key)
         os.makedirs(category_dir, exist_ok=True)
+
+    def _category_dir(self, category):
+        folder = sanitize_path_component(category, default='未分类')
+        return ensure_inside_base(self.image_lib_dir,
+                                  os.path.join(self.image_lib_dir, folder))
+
+    @staticmethod
+    def _unique_path(directory, filename):
+        stem, ext = os.path.splitext(filename)
+        candidate = filename
+        counter = 1
+        while os.path.exists(os.path.join(directory, candidate)):
+            candidate = f'{stem}（{counter}）{ext}'
+            counter += 1
+        return os.path.join(directory, candidate), candidate
 
     # =================================================================
     # Database
@@ -158,10 +176,10 @@ class MaterialManager:
         conn.commit()
 
     def _migrate_category_folder(self, old_category, new_category):
-        old_dir = os.path.join(self.image_lib_dir, old_category)
+        old_dir = self._category_dir(old_category)
         if not os.path.isdir(old_dir):
             return
-        new_dir = os.path.join(self.image_lib_dir, new_category)
+        new_dir = self._category_dir(new_category)
         os.makedirs(new_dir, exist_ok=True)
         for name in os.listdir(old_dir):
             old_path = os.path.join(old_dir, name)
@@ -204,8 +222,8 @@ class MaterialManager:
         for row in rows:
             if not row['image_filename']:
                 continue
-            path = os.path.join(self.image_lib_dir, row['category'],
-                               row['image_filename'])
+            path = os.path.join(self._category_dir(row['category']),
+                                row['image_filename'])
             if not os.path.exists(path):
                 continue
             total += 1
@@ -287,11 +305,12 @@ class MaterialManager:
             original_filename = os.path.basename(source_path)
             ext = os.path.splitext(source_path)[1].lower()
             uid = uuid.uuid4().hex[:8]
-            safe_batch = batch_number.replace('/', '_').replace('\\', '_')
+            safe_batch = sanitize_filename_stem(batch_number)
             image_filename = f'{uid}_{safe_batch}{ext}'
-            category_dir = os.path.join(self.image_lib_dir, category)
+            category_dir = self._category_dir(category)
             os.makedirs(category_dir, exist_ok=True)
-            dest = os.path.join(category_dir, image_filename)
+            dest = ensure_inside_base(category_dir,
+                                      os.path.join(category_dir, image_filename))
             shutil.copy2(source_path, dest)
             if ext in ('.jpg', '.jpeg', '.png'):
                 self.auto_crop_image(dest)
@@ -321,16 +340,167 @@ class MaterialManager:
         import fitz
         doc = fitz.open(pdf_path)
         result = []
-        base_name = os.path.splitext(os.path.basename(pdf_path))[0]
+        base_name = sanitize_filename_stem(os.path.splitext(os.path.basename(pdf_path))[0])
         os.makedirs(output_dir, exist_ok=True)
-        for i in range(len(doc)):
-            page = doc[i]
-            pix = page.get_pixmap(dpi=200)
-            img_path = os.path.join(output_dir, f'{base_name}_p{i + 1}.jpg')
-            pix.save(img_path)
-            result.append((i + 1, img_path))
-        doc.close()
+        try:
+            for i in range(len(doc)):
+                page = doc[i]
+                pix = page.get_pixmap(dpi=200)
+                img_path = os.path.join(output_dir, f'{base_name}_p{i + 1}.jpg')
+                pix.save(img_path)
+                result.append((i + 1, img_path))
+        finally:
+            doc.close()
         return result
+
+    def import_library(self, source_lib_dir):
+        """Merge an old material library into the current library."""
+        stats = {
+            'imported': 0,
+            'skipped': 0,
+            'categories_added': 0,
+            'errors': [],
+        }
+        if not os.path.isdir(source_lib_dir):
+            raise FileNotFoundError(f'未找到材质单库目录：{source_lib_dir}')
+
+        source_db = os.path.join(source_lib_dir, 'material_certs.db')
+        if os.path.exists(source_db):
+            self._import_library_with_db(source_lib_dir, source_db, stats)
+        else:
+            self._import_library_images_only(source_lib_dir, stats)
+        return stats
+
+    def _ensure_import_category(self, category):
+        if category in self.categories:
+            return
+        self.add_category(category, category)
+
+    def _source_image_path(self, source_lib_dir, category, filename):
+        candidates = [
+            os.path.join(source_lib_dir, category, filename),
+            os.path.join(source_lib_dir, sanitize_path_component(category), filename),
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                return path
+        return candidates[0]
+
+    def _copy_import_image(self, source_path, category, preferred_name):
+        ext = os.path.splitext(preferred_name or source_path)[1].lower() or '.jpg'
+        stem = sanitize_filename_stem(
+            os.path.splitext(preferred_name or os.path.basename(source_path))[0])
+        category_dir = self._category_dir(category)
+        os.makedirs(category_dir, exist_ok=True)
+        dest, filename = self._unique_path(category_dir, f'{stem}{ext}')
+        shutil.copy2(source_path, dest)
+        return dest, filename
+
+    def _insert_imported_record(self, record, image_filename, file_size):
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        category = record.get('category', '未分类') or '未分类'
+        params = record.get('params', '{}') or '{}'
+        if isinstance(params, dict):
+            params = json.dumps(params, ensure_ascii=False)
+        fields = {
+            'category': category,
+            'batch_number': record.get('batch_number', '') or '未命名',
+            'params': params,
+            'image_filename': image_filename,
+            'original_filename': record.get('original_filename', image_filename) or image_filename,
+            'file_size': file_size,
+            'notes': record.get('notes', '') or '',
+            'is_default': int(record.get('is_default') or 0),
+            'cert_date': record.get('cert_date', '') or '',
+            'is_expired': int(record.get('is_expired') or 0),
+            'created_at': record.get('created_at', '') or now,
+            'updated_at': record.get('updated_at', '') or now,
+            'product_type': record.get('product_type', '') or '',
+            'rotation': int(record.get('rotation') or 0) % 360,
+        }
+        conn = self._connect()
+        try:
+            conn.execute('''INSERT INTO material_certificates
+                (category, batch_number, params, image_filename,
+                 original_filename, file_size, notes, is_default, cert_date,
+                 is_expired, created_at, updated_at, product_type, rotation)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (fields['category'], fields['batch_number'], fields['params'],
+                 fields['image_filename'], fields['original_filename'],
+                 fields['file_size'], fields['notes'], fields['is_default'],
+                 fields['cert_date'], fields['is_expired'], fields['created_at'],
+                 fields['updated_at'], fields['product_type'], fields['rotation']))
+            conn.commit()
+        finally:
+            conn.close()
+
+    def _import_library_with_db(self, source_lib_dir, source_db, stats):
+        conn = sqlite3.connect(source_db)
+        conn.row_factory = sqlite3.Row
+        try:
+            rows = conn.execute(
+                'SELECT * FROM material_certificates').fetchall()
+        finally:
+            conn.close()
+
+        for row in rows:
+            record = dict(row)
+            category = record.get('category') or '未分类'
+            filename = record.get('image_filename') or ''
+            try:
+                if not filename:
+                    stats['skipped'] += 1
+                    continue
+                if category not in self.categories:
+                    self._ensure_import_category(category)
+                    stats['categories_added'] += 1
+                source_path = self._source_image_path(
+                    source_lib_dir, category, filename)
+                if not os.path.exists(source_path):
+                    stats['skipped'] += 1
+                    stats['errors'].append(f'缺少图片：{category}/{filename}')
+                    continue
+                dest, new_filename = self._copy_import_image(
+                    source_path, category, filename)
+                self._insert_imported_record(
+                    record, new_filename, os.path.getsize(dest))
+                stats['imported'] += 1
+            except Exception as exc:
+                stats['skipped'] += 1
+                stats['errors'].append(
+                    f'{category}/{filename or record.get("batch_number", "")}: {exc}')
+
+    def _import_library_images_only(self, source_lib_dir, stats):
+        valid_exts = {'.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff'}
+        for category in os.listdir(source_lib_dir):
+            category_path = os.path.join(source_lib_dir, category)
+            if not os.path.isdir(category_path) or category.startswith('_'):
+                continue
+            if category not in self.categories:
+                self._ensure_import_category(category)
+                stats['categories_added'] += 1
+            for filename in os.listdir(category_path):
+                source_path = os.path.join(category_path, filename)
+                if not os.path.isfile(source_path):
+                    continue
+                ext = os.path.splitext(filename)[1].lower()
+                if ext not in valid_exts:
+                    continue
+                try:
+                    dest, new_filename = self._copy_import_image(
+                        source_path, category, filename)
+                    record = {
+                        'category': category,
+                        'batch_number': os.path.splitext(filename)[0],
+                        'params': '{}',
+                        'original_filename': filename,
+                    }
+                    self._insert_imported_record(
+                        record, new_filename, os.path.getsize(dest))
+                    stats['imported'] += 1
+                except Exception as exc:
+                    stats['skipped'] += 1
+                    stats['errors'].append(f'{category}/{filename}: {exc}')
 
     def update_certificate(self, cert_id, **kwargs):
         allowed = {
@@ -378,11 +548,11 @@ class MaterialManager:
             if (new_fn != old.get('image_filename', '')
                     or new_category != old['category']):
                 if old.get('image_filename'):
-                    old_path = os.path.join(self.image_lib_dir,
-                                           old['category'],
-                                           old['image_filename'])
-                    new_path = os.path.join(self.image_lib_dir,
-                                           new_category, new_fn)
+                    old_path = os.path.join(
+                        self._category_dir(old['category']),
+                        old['image_filename'])
+                    new_path = os.path.join(
+                        self._category_dir(new_category), new_fn)
                     os.makedirs(os.path.dirname(new_path), exist_ok=True)
                     if os.path.exists(old_path):
                         try:
@@ -427,7 +597,7 @@ class MaterialManager:
             base += '_' + '_'.join(param_parts)
         if cert_date:
             base += '_' + cert_date
-        base = base.replace('/', '_').replace('\\', '_').replace(':', '_')
+        base = sanitize_filename_stem(base)
 
         old_ext = os.path.splitext(old_filename)[1] if old_filename else '.jpg'
         old_base = os.path.splitext(old_filename)[0] if old_filename else ''
@@ -435,7 +605,7 @@ class MaterialManager:
         if old_base == base:
             return f'{base}{old_ext}'
 
-        category_dir = os.path.join(self.image_lib_dir, category)
+        category_dir = self._category_dir(category)
         candidate = f'{base}{old_ext}'
         full = os.path.join(category_dir, candidate)
         if not os.path.exists(full) or candidate == old_filename:
@@ -458,8 +628,8 @@ class MaterialManager:
             conn.close()
             return False
         if row['image_filename']:
-            filepath = os.path.join(self.image_lib_dir, row['category'],
-                                     row['image_filename'])
+            filepath = os.path.join(self._category_dir(row['category']),
+                                    row['image_filename'])
             if os.path.exists(filepath):
                 os.remove(filepath)
         conn.execute('DELETE FROM material_certificates WHERE id = ?',
@@ -692,7 +862,7 @@ class MaterialManager:
     def get_image_path(self, cert):
         if not cert.get('image_filename'):
             return None
-        return os.path.join(self.image_lib_dir, cert['category'],
+        return os.path.join(self._category_dir(cert['category']),
                             cert['image_filename'])
 
     def get_report_image_path(self, cert):

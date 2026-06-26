@@ -9,6 +9,9 @@ import json
 from docx import Document
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from core.path_utils import (
+    ensure_inside_base, sanitize_filename_stem, sanitize_path_component,
+)
 
 
 def _load_mapping(product_dir):
@@ -1920,16 +1923,20 @@ def generate_report(template_path, excel_data, output_dir,
     # Output path
     project_name = excel_data.get('project_info', {}).get('项目名称', '未命名项目')
     report_date = excel_data.get('project_info', {}).get('制造日期', '未知日期')
-    safe_date = _normalize_report_month(report_date)
+    safe_project_name = sanitize_path_component(project_name)
+    safe_date = sanitize_path_component(_normalize_report_month(report_date))
+    safe_output_name = sanitize_filename_stem(output_name)
 
-    output_subdir = os.path.join(output_dir, project_name, safe_date)
+    output_subdir = ensure_inside_base(
+        output_dir, os.path.join(output_dir, safe_project_name, safe_date))
     os.makedirs(output_subdir, exist_ok=True)
 
-    base_path = os.path.join(output_subdir, f'{output_name}.docx')
+    base_path = os.path.join(output_subdir, f'{safe_output_name}.docx')
     output_path = base_path
     version = 1
     while os.path.exists(output_path):
-        output_path = os.path.join(output_subdir, f'{output_name}_V{version}.docx')
+        output_path = os.path.join(
+            output_subdir, f'{safe_output_name}_V{version}.docx')
         version += 1
 
     try:

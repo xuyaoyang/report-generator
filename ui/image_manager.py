@@ -2,6 +2,7 @@
 Material certificate image management panel.
 """
 import os
+import tempfile
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
     QTreeWidget, QTreeWidgetItem, QScrollArea, QFrame,
@@ -747,6 +748,12 @@ class ImageManagerWidget(QWidget):
         self.btn_upload = QPushButton('上传材质单')
         self.btn_upload.clicked.connect(self._on_upload)
         toolbar.addWidget(self.btn_upload)
+
+        self.btn_import_library = QPushButton('导入材质单库')
+        self.btn_import_library.setObjectName('btnSecondary')
+        self.btn_import_library.clicked.connect(self._on_import_library)
+        toolbar.addWidget(self.btn_import_library)
+
         self.lbl_drop_hint = QLabel('支持拖拽上传图片/PDF')
         self.lbl_drop_hint.setStyleSheet('color: #888; font-size: 11px;')
         toolbar.addWidget(self.lbl_drop_hint)
@@ -1439,25 +1446,25 @@ class ImageManagerWidget(QWidget):
                       batch_number=''):
         """Import image or PDF files. PDF pages are each added as a cert.
         Returns list of new certificate IDs."""
-        category_dir = os.path.join(self.manager.image_lib_dir, category)
         new_ids = []
         used_batch = False  # only override first non-PDF file's batch
 
         for f in file_paths:
             ext = os.path.splitext(f)[1].lower()
             if ext == '.pdf':
-                pages = self.manager.convert_pdf_to_images(f, category_dir)
-                base = os.path.splitext(os.path.basename(f))[0]
-                for page_num, img_path in pages:
-                    cert_id = self.manager.add_certificate(
-                        category=category,
-                        batch_number=f'{base}_p{page_num}',
-                        params=params,
-                        source_path=img_path,
-                        notes=notes,
-                        cert_date=cert_date,
-                    )
-                    new_ids.append(cert_id)
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    pages = self.manager.convert_pdf_to_images(f, tmpdir)
+                    base = os.path.splitext(os.path.basename(f))[0]
+                    for page_num, img_path in pages:
+                        cert_id = self.manager.add_certificate(
+                            category=category,
+                            batch_number=f'{base}_p{page_num}',
+                            params=params,
+                            source_path=img_path,
+                            notes=notes,
+                            cert_date=cert_date,
+                        )
+                        new_ids.append(cert_id)
             else:
                 if batch_number and not used_batch:
                     base = batch_number
@@ -1489,6 +1496,33 @@ class ImageManagerWidget(QWidget):
             return
 
         self._show_upload_dialog(files)
+
+    def _on_import_library(self):
+        folder = QFileDialog.getExistingDirectory(
+            self, '选择旧材质单库文件夹', '')
+        if not folder:
+            return
+        try:
+            stats = self.manager.import_library(folder)
+            self.selected_cert_id = None
+            self._checked_cert_ids.clear()
+            self._clear_detail()
+            self._load_tree()
+            self._load_images(sub_filter=self._current_sub_filter)
+            self.material_changed.emit()
+            message = (
+                '导入完成：\n'
+                f'成功导入 {stats["imported"]} 条\n'
+                f'跳过 {stats["skipped"]} 条\n'
+                f'新增分类 {stats["categories_added"]} 个'
+            )
+            if stats.get('errors'):
+                preview = '\n'.join(stats['errors'][:5])
+                more = '' if len(stats['errors']) <= 5 else '\n……'
+                message += f'\n\n部分错误：\n{preview}{more}'
+            QMessageBox.information(self, '导入材质单库', message)
+        except Exception as e:
+            QMessageBox.warning(self, '导入失败', str(e))
 
     def _show_upload_dialog(self, files):
         """Show upload dialog and process files if accepted."""

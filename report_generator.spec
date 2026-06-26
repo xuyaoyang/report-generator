@@ -3,7 +3,6 @@ datas = [
     ('config/material_categories.json', 'config'),
     ('products', 'products'),
     ('ui/resources', 'ui/resources'),
-    ('image_lib', 'image_lib'),
 ]
 
 hiddenimports = []

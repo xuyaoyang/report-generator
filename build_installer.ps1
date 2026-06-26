@@ -24,11 +24,12 @@ if (-not $iscc) {
 }
 
 if ($iscc) {
-    & $iscc.Source ".\installer.iss"
-    Write-Host "Installer created: $ProjectRoot\dist\RonghaiReportSetup.exe"
+    $isccPath = if ($iscc.Source) { $iscc.Source } else { $iscc.FullName }
+    & $isccPath ".\installer.iss"
+    Write-Host "Installer created: $ProjectRoot\dist\融海报告生成安装包.exe"
 } else {
     Write-Host "Inno Setup not found. Portable folder created: $ProjectRoot\dist\融海报告生成"
     Write-Host "Install Inno Setup and rerun this script to create a setup EXE."
 }
 
-Write-Host "First launch initializes Excel templates, material library, and report output under the install folder."
+Write-Host "First launch asks for a work directory and initializes Excel templates, material library, and report output there."

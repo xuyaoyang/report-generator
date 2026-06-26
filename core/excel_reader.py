@@ -4,6 +4,10 @@ import tempfile
 from openpyxl import load_workbook
 
 
+class ExcelRecalculateError(RuntimeError):
+    """Raised when a formula workbook cannot be recalculated safely."""
+
+
 def read_excel_data(excel_path):
     """
     Read all sheets from the Excel template.
@@ -21,9 +25,16 @@ def read_excel_data(excel_path):
     recalculated_copy = None
     load_path = excel_path
     if _has_formulas(excel_path):
-        recalculated_copy = _make_recalculated_copy(excel_path)
+        recalculated_copy, error = _make_recalculated_copy(excel_path)
         if recalculated_copy:
             load_path = recalculated_copy
+        else:
+            raise ExcelRecalculateError(
+                '当前 Excel 文件包含公式，但本机无法调用 Microsoft Excel 自动重算。\n\n'
+                '为避免使用过期或空白的公式缓存，本次导入已停止。\n'
+                '请用 Microsoft Excel 打开该文件并保存一次，或安装/修复 Excel 后重试。\n\n'
+                f'错误信息：{error or "未知错误"}'
+            )
 
     wb = load_workbook(load_path, data_only=True)
 
@@ -112,8 +123,8 @@ def _make_recalculated_copy(excel_path):
     try:
         import pythoncom
         import win32com.client
-    except Exception:
-        return None
+    except Exception as exc:
+        return None, str(exc)
 
     tmp = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False)
     tmp_path = tmp.name
@@ -133,13 +144,13 @@ def _make_recalculated_copy(excel_path):
         )
         excel.CalculateFullRebuild()
         workbook.SaveCopyAs(tmp_path)
-        return tmp_path
-    except Exception:
+        return tmp_path, ''
+    except Exception as exc:
         try:
             os.remove(tmp_path)
         except OSError:
             pass
-        return None
+        return None, str(exc)
     finally:
         if workbook is not None:
             workbook.Close(False)

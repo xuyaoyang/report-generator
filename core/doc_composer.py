@@ -58,11 +58,20 @@ def _replace_all(doc, fill_map):
     _replace_text_nodes(doc.element.body, fill_map)
 
 
+def _body_content_children(body):
+    return [
+        child for child in list(body)
+        if (child.tag.split('}')[-1] if '}' in child.tag else child.tag) != 'sectPr'
+    ]
+
+
 def _clone_body_content(doc, times):
     if times <= 0:
         return
     body = doc.element.body
-    original_children = list(body)
+    original_children = _body_content_children(body)
+    if not original_children:
+        return
     last_child = original_children[-1]
     for _ in range(times):
         for child in original_children:
@@ -104,7 +113,7 @@ def process_section(template_path, fill_map, repeat=1, fill_maps=None,
         _clone_body_content(doc, repeat - 1)
 
         if fill_maps and len(fill_maps) == repeat:
-            all_children = list(doc.element.body)
+            all_children = _body_content_children(doc.element.body)
             group_size = len(all_children) // repeat
             for i in range(repeat):
                 start = i * group_size
@@ -117,10 +126,12 @@ def process_section(template_path, fill_map, repeat=1, fill_maps=None,
             _replace_all(doc, fill_map)
 
         if (between_pages or page_break_every) and repeat > 1:
-            all_children = list(doc.element.body)
+            all_children = _body_content_children(doc.element.body)
             group_size = len(all_children) // repeat
             for g in range(1, repeat):
                 if page_break_every and g % page_break_every != 0:
+                    continue
+                if g * group_size >= len(all_children):
                     continue
                 insert_before = all_children[g * group_size]
                 pb_para = _make_page_break_para()

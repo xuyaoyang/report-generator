@@ -3,6 +3,7 @@ import os
 import shutil
 import re
 from datetime import datetime
+from core.path_utils import ensure_inside_base, sanitize_path_component
 
 
 def normalize_report_month(report_date):
@@ -41,8 +42,10 @@ def get_archive_path(base_dir, project_name, report_date=None):
     """
     if report_date is None:
         report_date = datetime.now().strftime('%Y-%m')
-    safe_date = normalize_report_month(report_date)
-    return os.path.join(base_dir, project_name, safe_date)
+    safe_project = sanitize_path_component(project_name)
+    safe_date = sanitize_path_component(normalize_report_month(report_date))
+    return ensure_inside_base(
+        base_dir, os.path.join(base_dir, safe_project, safe_date))
 
 
 def archive_report(file_path, archive_base, project_name, report_date=None):
